@@ -9,11 +9,13 @@ class Performer {
     required this.name,
     required this.instrument,
     required this.experienceLevel,
+    required this.created,
   });
 
   final String name;
   final Instrument instrument;
   final ExperienceLevel experienceLevel;
+  final DateTime created;
 
   // Two performers should be considered equal if they have the same name.
   @override

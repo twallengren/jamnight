@@ -27,9 +27,14 @@ class _InstrumentDropdownState extends State<InstrumentDropdown> {
       items: Instrument.values.map((Instrument instrument) {
         return DropdownMenuItem<Instrument>(
           value: instrument,
-          child: Text(instrument.toString()),
+          child: Text(instrument.name.toUpperCase()),
         );
       }).toList(),
     );
+  }
+
+  // this method capitalizes the first letter of a string
+  String _capitalize(String string) {
+    return string[0].toUpperCase() + string.substring(1);
   }
 }

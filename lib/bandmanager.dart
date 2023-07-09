@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'performer.dart';
-import 'performereditor.dart';
 
 class BandManager extends StatefulWidget {
   const BandManager({super.key, required this.title});
@@ -14,21 +12,6 @@ class BandManager extends StatefulWidget {
 
 class _BandManagerState extends State<BandManager> {
   final Logger logger = Logger();
-  final List<Performer> _performers = <Performer>[];
-
-  void _addPerformer(Performer performer) {
-    setState(() {
-      _performers.add(performer);
-      logger.i(_performers);
-    });
-  }
-
-  void _removePerformer(Performer performer) {
-    setState(() {
-      _performers.remove(performer);
-      logger.i(_performers);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +20,7 @@ class _BandManagerState extends State<BandManager> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            PerformerEditor(
-              onPerformerCreated: _addPerformer,
-              onPerformerRemoved: _removePerformer,
-            ),
-          ],
-        ),
-      ),
+      body: const Text('Band Manager'),
     );
   }
 }

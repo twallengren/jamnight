@@ -29,7 +29,7 @@ class _ExperienceLevelDropdownState extends State<ExperienceLevelDropdown> {
       items: ExperienceLevel.values.map((ExperienceLevel experienceLevel) {
         return DropdownMenuItem<ExperienceLevel>(
           value: experienceLevel,
-          child: Text(experienceLevel.toString()),
+          child: Text(experienceLevel.name.toUpperCase()),
         );
       }).toList(),
     );
