@@ -1,15 +1,19 @@
+import 'package:jamnight/experiencelevel.dart';
+
+import 'instrument.dart';
+
 // This class represents a single performer that could be added to a jam band.
 // It contains a name, an instrument, and a skill level.
 class Performer {
   const Performer({
     required this.name,
     required this.instrument,
-    required this.skillLevel,
+    required this.experienceLevel,
   });
 
   final String name;
-  final String instrument;
-  final int skillLevel;
+  final Instrument instrument;
+  final ExperienceLevel experienceLevel;
 
   // Two performers should be considered equal if they have the same name.
   @override
@@ -23,6 +27,6 @@ class Performer {
   // This method returns a string representation of the performer.
   @override
   String toString() {
-    return 'Performer(name: $name, instrument: $instrument, skillLevel: $skillLevel)';
+    return 'Performer(name: $name, instrument: $instrument, experienceLevel: $experienceLevel)';
   }
 }

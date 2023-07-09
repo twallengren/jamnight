@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'performer.dart';
+import 'instrument.dart';
+import 'instrumentdropdown.dart';
+import 'experiencelevel.dart';
+import 'experienceleveldropdown.dart';
 
-// This widget allows users to create new performers and add them to the list. It should have a text box to enter information for the performer (name, instrument, and skill level), and a button to add the performer to the list.
 class PerformerEditor extends StatefulWidget {
   const PerformerEditor(
       {super.key,
@@ -16,21 +19,28 @@ class PerformerEditor extends StatefulWidget {
 }
 
 class _PerformerEditorState extends State<PerformerEditor> {
-  // This controller is used to retrieve the value of the text field.
   final TextEditingController _nameController = TextEditingController();
 
-  // This controller is used to retrieve the value of the text field.
-  final TextEditingController _instrumentController = TextEditingController();
+  Instrument _instrument = Instrument.guitar;
+  ExperienceLevel _experienceLevel = ExperienceLevel.beginner;
 
-  // This controller is used to retrieve the value of the text field.
-  final TextEditingController _skillLevelController = TextEditingController();
+  void _selectInstrument(Instrument instrument) {
+    setState(() {
+      _instrument = instrument;
+    });
+  }
 
-  // This method is called when the "Add Performer" button is pressed. It should create a new Performer object with the information from the text fields, and call the onPerformerCreated callback with the new performer.
+  void _selectExperienceLevel(ExperienceLevel experienceLevel) {
+    setState(() {
+      _experienceLevel = experienceLevel;
+    });
+  }
+
   void _createPerformer() {
     final Performer performer = Performer(
       name: _nameController.text,
-      instrument: _instrumentController.text,
-      skillLevel: int.parse(_skillLevelController.text),
+      instrument: _instrument,
+      experienceLevel: _experienceLevel,
     );
     widget.onPerformerCreated(performer);
   }
@@ -38,8 +48,8 @@ class _PerformerEditorState extends State<PerformerEditor> {
   void _removePerformer() {
     final Performer performer = Performer(
       name: _nameController.text,
-      instrument: _instrumentController.text,
-      skillLevel: int.parse(_skillLevelController.text),
+      instrument: _instrument,
+      experienceLevel: _experienceLevel,
     );
     widget.onPerformerRemoved(performer);
   }
@@ -54,18 +64,9 @@ class _PerformerEditorState extends State<PerformerEditor> {
             labelText: 'Name',
           ),
         ),
-        TextField(
-          controller: _instrumentController,
-          decoration: const InputDecoration(
-            labelText: 'Instrument',
-          ),
-        ),
-        TextField(
-          controller: _skillLevelController,
-          decoration: const InputDecoration(
-            labelText: 'Skill Level',
-          ),
-        ),
+        InstrumentDropdown(onInstrumentSelected: _selectInstrument),
+        ExperienceLevelDropdown(
+            onExperienceLevelSelected: _selectExperienceLevel),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
