@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'instrument.dart';
+import '../model/instrument.dart';
 
 class InstrumentDropdown extends StatefulWidget {
   const InstrumentDropdown({super.key, required this.onInstrumentSelected});

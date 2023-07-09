@@ -1,4 +1,4 @@
-import 'package:jamnight/experiencelevel.dart';
+import 'package:jamnight/model/experiencelevel.dart';
 
 import 'instrument.dart';
 

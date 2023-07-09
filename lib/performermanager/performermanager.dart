@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'performer.dart';
-import 'instrument.dart';
+import '../model/performer.dart';
+import 'performerlist.dart';
+import '../model/instrument.dart';
 import 'instrumentdropdown.dart';
-import 'experiencelevel.dart';
+import '../model/experiencelevel.dart';
 import 'experienceleveldropdown.dart';
 
 class PerformerManager extends StatefulWidget {
@@ -90,6 +91,7 @@ class _PerformerManagerState extends State<PerformerManager> {
                 ),
               ],
             ),
+            const PerformerList()
           ],
         ));
   }

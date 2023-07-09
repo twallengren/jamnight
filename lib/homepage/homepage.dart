@@ -23,12 +23,23 @@ class _HomePageState extends State<HomePage> {
         body: Center(
           child: Column(
             children: <Widget>[
-              const Text('Home Page'),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/performermanager');
-                },
-                child: const Text('Manage Performers'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/performermanager');
+                  },
+                  child: const Text('Manage Performers'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/bandmanager');
+                  },
+                  child: const Text('Manage Bands'),
+                ),
               ),
             ],
           ),
