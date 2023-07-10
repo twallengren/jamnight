@@ -34,12 +34,6 @@ class _PerformerListState extends State<PerformerList> {
             style: TextStyle(fontStyle: FontStyle.italic),
           ),
         ),
-        DataColumn(
-          label: Text(
-            'Created',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
       ],
       rows: dataStore
           .getPerformers()
@@ -47,7 +41,6 @@ class _PerformerListState extends State<PerformerList> {
                 DataCell(Text(performer.name)),
                 DataCell(Text(performer.instrument.name.toUpperCase())),
                 DataCell(Text(performer.experienceLevel.name.toUpperCase())),
-                DataCell(Text(performer.created.toString())),
               ]))
           .toList(),
     );
