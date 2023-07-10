@@ -3,7 +3,7 @@ import '../model/performer.dart';
 import '../model/instrument/instrument.dart';
 
 class BandSelector {
-  static List<Performer> selectBand(
+  static List<Performer> getRecommendedPerformers(
       Multimap<Instrument, Performer> performers) {
     List<Performer> band = [];
     for (Instrument instrument in Instrument.values) {
