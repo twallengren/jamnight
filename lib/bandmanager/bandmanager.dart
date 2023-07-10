@@ -21,7 +21,7 @@ class _BandManagerState extends State<BandManager> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const BandList(),
+      body: const Center(child: RecommendedPerformersWidget()),
     );
   }
 }

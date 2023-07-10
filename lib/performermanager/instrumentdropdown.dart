@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../model/instrument.dart';
+import '../model/instrument/instrument.dart';
 
 class InstrumentDropdown extends StatefulWidget {
   const InstrumentDropdown({super.key, required this.onInstrumentSelected});
@@ -31,10 +31,5 @@ class _InstrumentDropdownState extends State<InstrumentDropdown> {
         );
       }).toList(),
     );
-  }
-
-  // this method capitalizes the first letter of a string
-  String _capitalize(String string) {
-    return string[0].toUpperCase() + string.substring(1);
   }
 }

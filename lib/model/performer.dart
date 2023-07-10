@@ -1,11 +1,9 @@
 import 'package:jamnight/model/experiencelevel.dart';
 
-import 'instrument.dart';
+import 'instrument/instrument.dart';
 
-// This class represents a single performer that could be added to a jam band.
-// It contains a name, an instrument, and a skill level.
 class Performer {
-  const Performer({
+  Performer({
     required this.name,
     required this.instrument,
     required this.experienceLevel,
@@ -16,17 +14,35 @@ class Performer {
   final Instrument instrument;
   final ExperienceLevel experienceLevel;
   final DateTime created;
+  DateTime? lastPlayed;
 
-  // Two performers should be considered equal if they have the same name.
-  @override
-  bool operator ==(Object other) {
-    return other is Performer && other.name == name;
+  void setLastPlayed(DateTime dateTime) {
+    lastPlayed = dateTime;
+  }
+
+  DateTime getLastPlayed() {
+    if (lastPlayed == null) {
+      return created;
+    }
+    return lastPlayed!;
   }
 
   @override
-  int get hashCode => name.hashCode;
+  bool operator ==(Object other) {
+    return other is Performer &&
+        other.name == name &&
+        other.instrument == instrument &&
+        other.experienceLevel == experienceLevel &&
+        other.created == created;
+  }
 
-  // This method returns a string representation of the performer.
+  @override
+  int get hashCode =>
+      name.hashCode ^
+      instrument.hashCode ^
+      experienceLevel.hashCode ^
+      created.hashCode;
+
   @override
   String toString() {
     return 'Performer(name: $name, instrument: $instrument, experienceLevel: $experienceLevel)';

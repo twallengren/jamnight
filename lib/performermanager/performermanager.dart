@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../model/performer.dart';
 import 'performerlist.dart';
-import '../model/instrument.dart';
+import '../model/instrument/instrument.dart';
 import 'instrumentdropdown.dart';
 import '../model/experiencelevel.dart';
 import 'experienceleveldropdown.dart';

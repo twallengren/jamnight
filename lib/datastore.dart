@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:quiver/collection.dart';
 import 'model/performer.dart';
-import 'model/instrument.dart';
+import 'model/instrument/instrument.dart';
 
 class DataStore extends ChangeNotifier {
   final Logger logger = Logger();
@@ -15,6 +15,12 @@ class DataStore extends ChangeNotifier {
     logger.i('Adding performer: ${performer.name}');
     _performers.add(performer);
     _performersByInstrument.add(performer.instrument, performer);
+    List<Performer> performers =
+        _performersByInstrument[performer.instrument].toList();
+    performers.sort((Performer a, Performer b) =>
+        a.getLastPlayed().compareTo(b.getLastPlayed()));
+    _performersByInstrument.removeAll(performer.instrument);
+    _performersByInstrument.addValues(performer.instrument, performers);
     notifyListeners();
   }
 
@@ -31,7 +37,7 @@ class DataStore extends ChangeNotifier {
     return _performers;
   }
 
-  List<Performer> getPerformersByInstrument(Instrument instrument) {
-    return _performersByInstrument[instrument].toList();
+  Multimap<Instrument, Performer> getPerformersByInstrument() {
+    return _performersByInstrument;
   }
 }
