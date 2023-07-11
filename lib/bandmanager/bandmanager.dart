@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'recommendedperformerswidget.dart';
+import 'selectedperformerswidget.dart';
 
 class BandManager extends StatefulWidget {
   const BandManager({super.key, required this.title});
@@ -25,6 +26,7 @@ class _BandManagerState extends State<BandManager> {
           child: Column(
         children: [
           RecommendedPerformersWidget(),
+          SelectedPerformersWidget(),
         ],
       )),
     );
