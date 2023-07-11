@@ -71,8 +71,12 @@ class DataStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearSelectedBand() {
-    logger.i('Clearing selected band');
+  void finalizeSelectedBand() {
+    logger.i('Finalizing selected band');
+    for (Performer performer in _selectedPerformers) {
+      performer.setPerformerStatus(PerformerStatus.present);
+      performer.setLastPlayed(DateTime.now());
+    }
     _selectedPerformers.clear();
     notifyListeners();
   }

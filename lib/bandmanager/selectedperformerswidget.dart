@@ -52,6 +52,10 @@ class _SelectedPerformersWidgetState extends State<SelectedPerformersWidget> {
               ),
             ],
           ),
+          ElevatedButton(
+            onPressed: () => dataStore.finalizeSelectedBand(),
+            child: const Text('Finalize Band'),
+          )
         ],
       ),
     );
