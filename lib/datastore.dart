@@ -23,15 +23,10 @@ class DataStore extends ChangeNotifier {
 
     // multimap of performers by instrument
     _performersByInstrument.add(performer.instrument, performer);
-    List<Performer> performers =
-        _performersByInstrument[performer.instrument].toList();
-    performers.sort((Performer a, Performer b) =>
-        a.getLastPlayed().compareTo(b.getLastPlayed()));
-    _performersByInstrument.removeAll(performer.instrument);
-    _performersByInstrument.addValues(performer.instrument, performers);
+    _sortPerformersByInstrument();
 
     // update recommended performers
-    _recommendedPerformers = BandSelector.getRecommendedPerformers(this);
+    _updateRecommendedPerformers();
 
     notifyListeners();
   }
@@ -41,8 +36,8 @@ class DataStore extends ChangeNotifier {
     _performers.remove(performer);
     _performersByInstrument
         .removeWhere((Instrument instrument, Performer p) => p == performer);
-    _recommendedPerformers.remove(performer);
     _selectedPerformers.remove(performer);
+    _updateRecommendedPerformers();
     notifyListeners();
   }
 
@@ -52,7 +47,7 @@ class DataStore extends ChangeNotifier {
     performer.setPerformerStatus(PerformerStatus.selected);
     _selectedPerformers.add(_recommendedPerformers[rowIndex]);
     _recommendedPerformers.removeAt(rowIndex);
-    _recommendedPerformers = BandSelector.getRecommendedPerformers(this);
+    _updateRecommendedPerformers();
     notifyListeners();
   }
 
@@ -61,13 +56,7 @@ class DataStore extends ChangeNotifier {
     Performer performer = _selectedPerformers[rowIndex];
     performer.setPerformerStatus(PerformerStatus.present);
     _selectedPerformers.removeAt(rowIndex);
-    _recommendedPerformers = BandSelector.getRecommendedPerformers(this);
-    notifyListeners();
-  }
-
-  void addPerformerToSelectedPerformers(Performer performer) {
-    logger.i('Adding performer to selected band: ${performer.name}');
-    _selectedPerformers.add(performer);
+    _updateRecommendedPerformers();
     notifyListeners();
   }
 
@@ -78,7 +67,24 @@ class DataStore extends ChangeNotifier {
       performer.setLastPlayed(DateTime.now());
     }
     _selectedPerformers.clear();
+    _sortPerformersByInstrument();
+    _updateRecommendedPerformers();
     notifyListeners();
+  }
+
+  void _updateRecommendedPerformers() {
+    _recommendedPerformers = BandSelector.getRecommendedPerformers(this);
+  }
+
+  void _sortPerformersByInstrument() {
+    for (Instrument instrument in Instrument.values) {
+      List<Performer> performersForInstrument =
+          _performersByInstrument[instrument].toList();
+      performersForInstrument.sort((Performer a, Performer b) =>
+          a.getLastPlayed().compareTo(b.getLastPlayed()));
+      _performersByInstrument.removeAll(instrument);
+      _performersByInstrument.addValues(instrument, performersForInstrument);
+    }
   }
 
   List<Performer> getRecommendedPerformers() {
