@@ -81,18 +81,6 @@ class DataStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addPerformerToRecommendedPerformers(Performer performer) {
-    logger.i('Adding performer to recommended: ${performer.name}');
-    _recommendedPerformers.add(performer);
-    notifyListeners();
-  }
-
-  void removePerformerFromRecommendedPerformers(Performer performer) {
-    logger.i('Removing performer from recommended: ${performer.name}');
-    _recommendedPerformers.remove(performer);
-    notifyListeners();
-  }
-
   List<Performer> getRecommendedPerformers() {
     return _recommendedPerformers;
   }
