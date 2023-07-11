@@ -26,6 +26,17 @@ class _SelectedPerformersWidgetState extends State<SelectedPerformersWidget> {
             columnWidthMode: ColumnWidthMode.fill,
             horizontalScrollPhysics: const BouncingScrollPhysics(),
             source: SelectedPerformersDataSource(dataStore: dataStore),
+            endSwipeActionsBuilder:
+                (BuildContext context, DataGridRow dataGridRow, int rowIndex) {
+              return GestureDetector(
+                onTap: () =>
+                    dataStore.removePerformerFromSelectedPerformers(rowIndex),
+                child: Container(
+                  color: Colors.redAccent,
+                  child: const Center(child: Icon(Icons.remove)),
+                ),
+              );
+            },
             columns: <GridColumn>[
               GridColumn(
                 columnName: 'Name',

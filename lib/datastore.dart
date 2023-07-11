@@ -56,15 +56,18 @@ class DataStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addPerformerToSelectedPerformers(Performer performer) {
-    logger.i('Adding performer to selected band: ${performer.name}');
-    _selectedPerformers.add(performer);
+  void removePerformerFromSelectedPerformers(int rowIndex) {
+    logger.i('Removing performer from selected: $rowIndex');
+    Performer performer = _selectedPerformers[rowIndex];
+    performer.setPerformerStatus(PerformerStatus.present);
+    _selectedPerformers.removeAt(rowIndex);
+    _recommendedPerformers = BandSelector.getRecommendedPerformers(this);
     notifyListeners();
   }
 
-  void removePerformerFromSelectedPerformers(Performer performer) {
-    logger.i('Removing performer from selected band: ${performer.name}');
-    _selectedPerformers.remove(performer);
+  void addPerformerToSelectedPerformers(Performer performer) {
+    logger.i('Adding performer to selected band: ${performer.name}');
+    _selectedPerformers.add(performer);
     notifyListeners();
   }
 
