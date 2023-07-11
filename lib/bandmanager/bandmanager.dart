@@ -24,7 +24,7 @@ class _BandManagerState extends State<BandManager> {
       ),
       body: const Center(
           child: Column(
-        children: [
+        children: <Widget>[
           RecommendedPerformersWidget(),
           SelectedPerformersWidget(),
         ],

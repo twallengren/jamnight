@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:jamnight/bandmanager/bandselector.dart';
 import 'package:logger/logger.dart';
 import 'package:quiver/collection.dart';
-import 'model/performer.dart';
+import 'model/performer/performer.dart';
 import 'model/instrument/instrument.dart';
+import 'model/performer/performerstatus.dart';
 
 class DataStore extends ChangeNotifier {
   final Logger logger = Logger();
@@ -10,11 +12,16 @@ class DataStore extends ChangeNotifier {
   final List<Performer> _performers = [];
   final Multimap<Instrument, Performer> _performersByInstrument =
       Multimap<Instrument, Performer>();
-  List<Performer> _selectedBand = [];
+  List<Performer> _recommendedPerformers = [];
+  final List<Performer> _selectedPerformers = [];
 
   void addPerformer(Performer performer) {
     logger.i('Adding performer: ${performer.name}');
+
+    // list of all performers
     _performers.add(performer);
+
+    // multimap of performers by instrument
     _performersByInstrument.add(performer.instrument, performer);
     List<Performer> performers =
         _performersByInstrument[performer.instrument].toList();
@@ -22,38 +29,69 @@ class DataStore extends ChangeNotifier {
         a.getLastPlayed().compareTo(b.getLastPlayed()));
     _performersByInstrument.removeAll(performer.instrument);
     _performersByInstrument.addValues(performer.instrument, performers);
+
+    // update recommended performers
+    _recommendedPerformers = BandSelector.getRecommendedPerformers(this);
+
     notifyListeners();
   }
 
-  void removePerformer(String performerName) {
-    logger.i('Removing performer: $performerName');
-    _performers.removeWhere((Performer p) => p.name == performerName);
-    _performersByInstrument.removeWhere(
-        (Instrument instrument, Performer performer) =>
-            performer.name == performerName);
+  void removePerformer(Performer performer) {
+    logger.i('Removing performer: ${performer.name}');
+    _performers.remove(performer);
+    _performersByInstrument
+        .removeWhere((Instrument instrument, Performer p) => p == performer);
+    _recommendedPerformers.remove(performer);
+    _selectedPerformers.remove(performer);
     notifyListeners();
   }
 
-  void addPerformerToSelectedBand(Performer performer) {
+  void movePerformerFromRecommendedToSelected(int rowIndex) {
+    logger.i('Moving performer from recommended to selected: $rowIndex');
+    Performer performer = _recommendedPerformers[rowIndex];
+    performer.setPerformerStatus(PerformerStatus.selected);
+    _selectedPerformers.add(_recommendedPerformers[rowIndex]);
+    _recommendedPerformers.removeAt(rowIndex);
+    _recommendedPerformers = BandSelector.getRecommendedPerformers(this);
+    notifyListeners();
+  }
+
+  void addPerformerToSelectedPerformers(Performer performer) {
     logger.i('Adding performer to selected band: ${performer.name}');
-    _selectedBand.add(performer);
+    _selectedPerformers.add(performer);
     notifyListeners();
   }
 
-  void removePerformerFromSelectedBand(Performer performer) {
+  void removePerformerFromSelectedPerformers(Performer performer) {
     logger.i('Removing performer from selected band: ${performer.name}');
-    _selectedBand.remove(performer);
+    _selectedPerformers.remove(performer);
     notifyListeners();
   }
 
   void clearSelectedBand() {
     logger.i('Clearing selected band');
-    _selectedBand.clear();
+    _selectedPerformers.clear();
     notifyListeners();
   }
 
-  List<Performer> getSelectedBand() {
-    return _selectedBand;
+  void addPerformerToRecommendedPerformers(Performer performer) {
+    logger.i('Adding performer to recommended: ${performer.name}');
+    _recommendedPerformers.add(performer);
+    notifyListeners();
+  }
+
+  void removePerformerFromRecommendedPerformers(Performer performer) {
+    logger.i('Removing performer from recommended: ${performer.name}');
+    _recommendedPerformers.remove(performer);
+    notifyListeners();
+  }
+
+  List<Performer> getRecommendedPerformers() {
+    return _recommendedPerformers;
+  }
+
+  List<Performer> getSelectedPerformers() {
+    return _selectedPerformers;
   }
 
   List<Performer> getPerformers() {

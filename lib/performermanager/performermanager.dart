@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../model/performer.dart';
+import '../model/performer/performer.dart';
 import 'performerlist.dart';
 import '../model/instrument/instrument.dart';
 import 'instrumentdropdown.dart';
@@ -13,7 +13,7 @@ class PerformerManager extends StatefulWidget {
       required this.onPerformerRemoved});
 
   final ValueChanged<Performer> onPerformerCreated;
-  final ValueChanged<String> onPerformerRemoved;
+  final ValueChanged<Performer> onPerformerRemoved;
 
   @override
   State<PerformerManager> createState() => _PerformerManagerState();
@@ -48,7 +48,13 @@ class _PerformerManagerState extends State<PerformerManager> {
   }
 
   void _removePerformer() {
-    widget.onPerformerRemoved(_nameController.text);
+    final Performer performer = Performer(
+      name: _nameController.text,
+      instrument: _instrument,
+      experienceLevel: _experienceLevel,
+      created: DateTime.now(),
+    );
+    widget.onPerformerRemoved(performer);
   }
 
   @override

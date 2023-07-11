@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:quiver/collection.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../datastore.dart';
-import '../model/performer.dart';
-import '../model/instrument/instrument.dart';
-import 'bandselector.dart';
+import '../model/performer/performer.dart';
 
 class RecommendedPerformersWidget extends StatefulWidget {
   const RecommendedPerformersWidget({super.key});
@@ -17,19 +15,32 @@ class RecommendedPerformersWidget extends StatefulWidget {
 
 class _RecommendedPerformersWidgetState
     extends State<RecommendedPerformersWidget> {
+  final Logger logger = Logger();
+
   @override
   Widget build(BuildContext context) {
     DataStore dataStore = Provider.of<DataStore>(context, listen: true);
     return Center(
       child: Column(
         children: [
-          const Text('Recommended Players'),
+          const Text('Recommended Performers'),
           SfDataGrid(
             allowSwiping: true,
             swipeMaxOffset: 100,
             columnWidthMode: ColumnWidthMode.fill,
             horizontalScrollPhysics: const BouncingScrollPhysics(),
             source: RecommendedPerformersDataSource(dataStore: dataStore),
+            startSwipeActionsBuilder:
+                (BuildContext context, DataGridRow dataGridRow, int rowIndex) {
+              return GestureDetector(
+                onTap: () =>
+                    dataStore.movePerformerFromRecommendedToSelected(rowIndex),
+                child: Container(
+                  color: Colors.greenAccent,
+                  child: const Center(child: Icon(Icons.add)),
+                ),
+              );
+            },
             columns: <GridColumn>[
               GridColumn(
                 columnName: 'Name',
@@ -57,7 +68,7 @@ class RecommendedPerformersDataSource extends DataGridSource {
   final DataStore dataStore;
 
   @override
-  List<DataGridRow> get rows => getBandRows(dataStore);
+  List<DataGridRow> get rows => getBandRows();
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
@@ -71,13 +82,11 @@ class RecommendedPerformersDataSource extends DataGridSource {
     }).toList());
   }
 
-  List<DataGridRow> getBandRows(DataStore dataStore) {
+  List<DataGridRow> getBandRows() {
     List<DataGridRow> bandRows = [];
 
-    Multimap<Instrument, Performer> performers =
-        dataStore.getPerformersByInstrument();
     List<Performer> recommendedPerformers =
-        BandSelector.getRecommendedPerformers(performers);
+        dataStore.getRecommendedPerformers();
 
     for (Performer performer in recommendedPerformers) {
       bandRows.add(DataGridRow(cells: <DataGridCell>[

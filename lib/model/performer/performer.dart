@@ -1,6 +1,7 @@
 import 'package:jamnight/model/experiencelevel.dart';
 
-import 'instrument/instrument.dart';
+import '../instrument/instrument.dart';
+import 'performerstatus.dart';
 
 class Performer {
   Performer({
@@ -15,6 +16,7 @@ class Performer {
   final ExperienceLevel experienceLevel;
   final DateTime created;
   DateTime? lastPlayed;
+  PerformerStatus status = PerformerStatus.present;
 
   void setLastPlayed(DateTime dateTime) {
     lastPlayed = dateTime;
@@ -27,21 +29,19 @@ class Performer {
     return lastPlayed!;
   }
 
+  void setPerformerStatus(PerformerStatus performerStatus) {
+    status = performerStatus;
+  }
+
   @override
   bool operator ==(Object other) {
     return other is Performer &&
         other.name == name &&
-        other.instrument == instrument &&
-        other.experienceLevel == experienceLevel &&
-        other.created == created;
+        other.instrument == instrument;
   }
 
   @override
-  int get hashCode =>
-      name.hashCode ^
-      instrument.hashCode ^
-      experienceLevel.hashCode ^
-      created.hashCode;
+  int get hashCode => name.hashCode ^ instrument.hashCode;
 
   @override
   String toString() {

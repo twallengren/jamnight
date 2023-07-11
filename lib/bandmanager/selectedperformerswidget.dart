@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../datastore.dart';
-import '../model/performer.dart';
+import '../model/performer/performer.dart';
 
 class SelectedPerformersWidget extends StatefulWidget {
   const SelectedPerformersWidget({super.key});
@@ -19,7 +19,7 @@ class _SelectedPerformersWidgetState extends State<SelectedPerformersWidget> {
     return Center(
       child: Column(
         children: [
-          const Text('Selected Players'),
+          const Text('Selected Performers'),
           SfDataGrid(
             allowSwiping: true,
             swipeMaxOffset: 100,
@@ -70,7 +70,7 @@ class SelectedPerformersDataSource extends DataGridSource {
   List<DataGridRow> getBandRows(DataStore dataStore) {
     List<DataGridRow> bandRows = [];
 
-    List<Performer> selectedPerformers = dataStore.getSelectedBand();
+    List<Performer> selectedPerformers = dataStore.getSelectedPerformers();
 
     for (Performer performer in selectedPerformers) {
       bandRows.add(DataGridRow(cells: <DataGridCell>[
