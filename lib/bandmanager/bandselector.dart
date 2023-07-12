@@ -6,6 +6,9 @@ import '../model/performer/performerstatus.dart';
 
 class BandSelector {
   static List<Performer> getRecommendedPerformers(DataStore dataStore) {
+    List<Performer> performers = dataStore.getPerformers();
+    List<Performer> recommendedPerformers = [];
+
     Multimap<Instrument, Performer> performersByInstrument =
         dataStore.getPerformersByInstrument();
     List<Performer> band = [];
@@ -13,7 +16,7 @@ class BandSelector {
       List<Performer> performersForInstrument =
           performersByInstrument[instrument].toList();
       for (Performer performer in performersForInstrument) {
-        if (performer.status != PerformerStatus.selected) {
+        if (performer.getPerformerStatus() != PerformerStatus.selected) {
           performer.setPerformerStatus(PerformerStatus.recommended);
           band.add(performer);
           break;

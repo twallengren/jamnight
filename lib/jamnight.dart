@@ -29,10 +29,8 @@ class _JamNightState extends State<JamNight> {
       routes: {
         '/': (BuildContext context) =>
             const HomePage(title: 'Jam Night Home Page'),
-        '/performermanager': (BuildContext context) => PerformerManager(
-              onPerformerCreated: dataStore.addPerformer,
-              onPerformerRemoved: dataStore.removePerformer,
-            ),
+        '/performermanager': (BuildContext context) =>
+            PerformerManager(onPerformerCreated: dataStore.addPerformer),
         '/bandmanager': (BuildContext context) =>
             const BandManager(title: 'Band Manager'),
       },

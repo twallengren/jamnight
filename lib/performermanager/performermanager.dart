@@ -7,13 +7,9 @@ import '../model/experiencelevel.dart';
 import 'experienceleveldropdown.dart';
 
 class PerformerManager extends StatefulWidget {
-  const PerformerManager(
-      {super.key,
-      required this.onPerformerCreated,
-      required this.onPerformerRemoved});
+  const PerformerManager({super.key, required this.onPerformerCreated});
 
   final ValueChanged<Performer> onPerformerCreated;
-  final ValueChanged<Performer> onPerformerRemoved;
 
   @override
   State<PerformerManager> createState() => _PerformerManagerState();
@@ -47,16 +43,6 @@ class _PerformerManagerState extends State<PerformerManager> {
     widget.onPerformerCreated(performer);
   }
 
-  void _removePerformer() {
-    final Performer performer = Performer(
-      name: _nameController.text,
-      instrument: _instrument,
-      experienceLevel: _experienceLevel,
-      created: DateTime.now(),
-    );
-    widget.onPerformerRemoved(performer);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,24 +64,12 @@ class _PerformerManagerState extends State<PerformerManager> {
             InstrumentDropdown(onInstrumentSelected: _selectInstrument),
             ExperienceLevelDropdown(
                 onExperienceLevelSelected: _selectExperienceLevel),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    onPressed: _createPerformer,
-                    child: const Text('Add Performer'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    onPressed: _removePerformer,
-                    child: const Text('Remove Performer'),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: _createPerformer,
+                child: const Text('Add Performer'),
+              ),
             ),
             const PerformerList()
           ],

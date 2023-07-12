@@ -15,22 +15,35 @@ class Performer {
   final Instrument instrument;
   final ExperienceLevel experienceLevel;
   final DateTime created;
-  DateTime? lastPlayed;
-  PerformerStatus status = PerformerStatus.present;
+  DateTime? _lastPlayed;
+  PerformerStatus _status = PerformerStatus.present;
+  int _numberOfTimesPlayed = 0;
 
   void setLastPlayed(DateTime dateTime) {
-    lastPlayed = dateTime;
+    _lastPlayed = dateTime;
   }
 
   DateTime getLastPlayed() {
-    if (lastPlayed == null) {
+    if (_lastPlayed == null) {
       return created;
     }
-    return lastPlayed!;
+    return _lastPlayed!;
   }
 
   void setPerformerStatus(PerformerStatus performerStatus) {
-    status = performerStatus;
+    _status = performerStatus;
+  }
+
+  PerformerStatus getPerformerStatus() {
+    return _status;
+  }
+
+  void incrementNumberOfTimesPlayed() {
+    _numberOfTimesPlayed++;
+  }
+
+  int getNumberOfTimesPlayed() {
+    return _numberOfTimesPlayed;
   }
 
   @override
