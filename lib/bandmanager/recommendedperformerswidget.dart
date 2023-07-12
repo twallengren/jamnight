@@ -51,8 +51,8 @@ class _RecommendedPerformersWidgetState
                 label: const Text('Instrument'),
               ),
               GridColumn(
-                columnName: 'Experience Level',
-                label: const Text('Experience Level'),
+                columnName: 'Times Played',
+                label: const Text('Times Played'),
               ),
             ],
           ),
@@ -96,7 +96,7 @@ class RecommendedPerformersDataSource extends DataGridSource {
             value: performer.instrument.name.toUpperCase()),
         DataGridCell(
             columnName: 'Experience Level',
-            value: performer.experienceLevel.name.toUpperCase()),
+            value: performer.getNumberOfTimesPlayed()),
       ]));
     }
 

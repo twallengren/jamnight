@@ -6,23 +6,40 @@ import '../model/performer/performerstatus.dart';
 
 class BandSelector {
   static List<Performer> getRecommendedPerformers(DataStore dataStore) {
-    List<Performer> performers = dataStore.getPerformers();
-    List<Performer> recommendedPerformers = [];
-
     Multimap<Instrument, Performer> performersByInstrument =
         dataStore.getPerformersByInstrument();
-    List<Performer> band = [];
+    List<Performer> recommendedPerformers = [];
+    List<Performer> nonPriorityPlayers = [];
+
     for (Instrument instrument in Instrument.values) {
       List<Performer> performersForInstrument =
           performersByInstrument[instrument].toList();
+      bool priorityPlayerNotFound = true;
       for (Performer performer in performersForInstrument) {
-        if (performer.getPerformerStatus() != PerformerStatus.selected) {
+        if (priorityPlayerNotFound &&
+            performer.getPerformerStatus() != PerformerStatus.selected) {
           performer.setPerformerStatus(PerformerStatus.recommended);
-          band.add(performer);
-          break;
+          recommendedPerformers.add(performer);
+          priorityPlayerNotFound = false;
+        } else if (performer.getPerformerStatus() != PerformerStatus.selected) {
+          nonPriorityPlayers.add(performer);
         }
       }
     }
-    return band;
+    nonPriorityPlayers.sort((Performer performerA, Performer performerB) =>
+        _performerComparison(performerA, performerB));
+    recommendedPerformers.addAll(nonPriorityPlayers);
+    return recommendedPerformers;
+  }
+
+  static int _performerComparison(Performer performerA, Performer performerB) {
+    int numberOfTimesPlayedComparison = performerA
+        .getNumberOfTimesPlayed()
+        .compareTo(performerB.getNumberOfTimesPlayed());
+    if (numberOfTimesPlayedComparison == 0) {
+      return performerA.getLastPlayed().compareTo(performerB.getLastPlayed());
+    } else {
+      return numberOfTimesPlayedComparison;
+    }
   }
 }
