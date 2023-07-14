@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:quiver/collection.dart';
 import 'package:jamnight/model/experiencelevel.dart';
 import 'package:jamnight/datastore.dart';
 import 'package:jamnight/model/performer/performer.dart';
@@ -6,35 +7,81 @@ import 'package:jamnight/model/instrument/instrument.dart';
 
 void main() {
   group('DataStore', () {
-    late DataStore dataStore;
     final DateTime now = DateTime.now();
-    final Performer performerA = Performer(
-        name: 'performerA',
-        instrument: Instrument.guitar,
-        experienceLevel: ExperienceLevel.beginner,
-        created: now);
+
+    late DataStore dataStore;
+    late Performer guitaristA;
+    late Performer guitaristB;
 
     setUp(() {
       dataStore = DataStore();
+      guitaristA = Performer(
+          name: 'guitaristA',
+          instrument: Instrument.guitar,
+          experienceLevel: ExperienceLevel.beginner,
+          created: now);
+      guitaristB = Performer(
+          name: 'guitaristB',
+          instrument: guitaristA.instrument,
+          experienceLevel: ExperienceLevel.beginner,
+          created: now.add(const Duration(seconds: 1)));
     });
 
-    test('should add a performer correctly', () {
-      dataStore.addPerformer(performerA);
+    test('addPerformer adds to both performers and performersByInstrument', () {
+      dataStore.addPerformer(guitaristA);
 
-      expect(dataStore.getPerformers(), contains(performerA));
-      expect(dataStore.getPerformersByInstrument().containsValue(performerA),
+      expect(dataStore.getPerformers(), contains(guitaristA));
+      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
           isTrue);
-      // Add more assertions here to validate the correctness of your addPerformer function.
+    });
+
+    test('addPerformer prioritizes performers by last time played', () {
+      dataStore.addPerformer(guitaristA);
+      dataStore.addPerformer(guitaristB);
+
+      expect(dataStore.getPerformers(), contains(guitaristA));
+      expect(dataStore.getPerformers(), contains(guitaristB));
+
+      Multimap<Instrument, Performer> performersByInstrument =
+          dataStore.getPerformersByInstrument();
+      List<Performer> performers =
+          performersByInstrument[guitaristA.instrument].toList();
+
+      Performer firstPerformer = performers[0];
+      Performer secondPerformer = performers[1];
+
+      expect(firstPerformer, equals(guitaristA));
+      expect(secondPerformer, equals(guitaristB));
+    });
+
+    test('addPerformer prioritizes performers by number of times played', () {
+      guitaristA.incrementNumberOfTimesPlayed();
+
+      dataStore.addPerformer(guitaristA);
+      dataStore.addPerformer(guitaristB);
+
+      expect(dataStore.getPerformers(), contains(guitaristA));
+      expect(dataStore.getPerformers(), contains(guitaristB));
+
+      Multimap<Instrument, Performer> performersByInstrument =
+          dataStore.getPerformersByInstrument();
+      List<Performer> performers =
+          performersByInstrument[guitaristA.instrument].toList();
+
+      Performer firstPerformer = performers[0];
+      Performer secondPerformer = performers[1];
+
+      expect(firstPerformer, equals(guitaristB));
+      expect(secondPerformer, equals(guitaristA));
     });
 
     test('should remove a performer correctly', () {
-      dataStore.addPerformer(performerA);
-      dataStore.removePerformer(performerA);
+      dataStore.addPerformer(guitaristA);
+      dataStore.removePerformer(guitaristA);
 
-      expect(dataStore.getPerformers(), isNot(contains(performerA)));
-      expect(dataStore.getPerformersByInstrument().containsValue(performerA),
+      expect(dataStore.getPerformers(), isNot(contains(guitaristA)));
+      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
           isFalse);
-      // Add more assertions here to validate the correctness of your removePerformer function.
     });
 
     // Continue adding more tests here to fully cover all your functions.
