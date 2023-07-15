@@ -3,7 +3,7 @@ import '../model/performer/performer.dart';
 import 'performerlist.dart';
 import '../model/instrument/instrument.dart';
 import 'instrumentdropdown.dart';
-import '../model/experiencelevel.dart';
+import '../model/performer/experiencelevel.dart';
 import 'experienceleveldropdown.dart';
 
 class PerformerManager extends StatefulWidget {

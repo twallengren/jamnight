@@ -1,4 +1,4 @@
-import 'package:jamnight/model/experiencelevel.dart';
+import 'package:jamnight/model/performer/experiencelevel.dart';
 
 import '../instrument/instrument.dart';
 import 'performerstatus.dart';
@@ -19,10 +19,6 @@ class Performer {
   PerformerStatus _status = PerformerStatus.present;
   int _numberOfTimesPlayed = 0;
 
-  void setLastPlayed(DateTime dateTime) {
-    _lastPlayed = dateTime;
-  }
-
   DateTime getLastPlayed() {
     if (_lastPlayed == null) {
       return created;
@@ -30,20 +26,30 @@ class Performer {
     return _lastPlayed!;
   }
 
-  void setPerformerStatus(PerformerStatus performerStatus) {
-    _status = performerStatus;
-  }
-
   PerformerStatus getPerformerStatus() {
     return _status;
   }
 
-  void incrementNumberOfTimesPlayed() {
-    _numberOfTimesPlayed++;
-  }
-
   int getNumberOfTimesPlayed() {
     return _numberOfTimesPlayed;
+  }
+
+  void recommendPerformer() {
+    _status = PerformerStatus.recommended;
+  }
+
+  void selectPerformer() {
+    _status = PerformerStatus.selected;
+  }
+
+  void unselectPerformer() {
+    _status = PerformerStatus.present;
+  }
+
+  void finalizePerformer() {
+    _status = PerformerStatus.present;
+    _lastPlayed = DateTime.now();
+    _numberOfTimesPlayed++;
   }
 
   @override

@@ -18,7 +18,7 @@ class BandSelector {
       for (Performer performer in performersForInstrument) {
         if (priorityPlayerNotFound &&
             performer.getPerformerStatus() != PerformerStatus.selected) {
-          performer.setPerformerStatus(PerformerStatus.recommended);
+          performer.recommendPerformer();
           recommendedPerformers.add(performer);
           priorityPlayerNotFound = false;
         } else if (performer.getPerformerStatus() != PerformerStatus.selected) {

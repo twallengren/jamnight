@@ -4,7 +4,6 @@ import 'package:logger/logger.dart';
 import 'package:quiver/collection.dart';
 import 'model/performer/performer.dart';
 import 'model/instrument/instrument.dart';
-import 'model/performer/performerstatus.dart';
 
 class DataStore extends ChangeNotifier {
   final Logger logger = Logger();
@@ -17,17 +16,10 @@ class DataStore extends ChangeNotifier {
 
   void addPerformer(Performer performer) {
     logger.i('Adding performer: ${performer.name}');
-
-    // list of all performers
     _performers.add(performer);
-
-    // multimap of performers by instrument
     _performersByInstrument.add(performer.instrument, performer);
     _sortPerformersByInstrumentMapValues();
-
-    // update recommended performers
     _updateRecommendedPerformers();
-
     notifyListeners();
   }
 
@@ -55,7 +47,7 @@ class DataStore extends ChangeNotifier {
   void movePerformerFromRecommendedToSelected(int rowIndex) {
     logger.i('Moving performer from recommended to selected: $rowIndex');
     Performer performer = _recommendedPerformers[rowIndex];
-    performer.setPerformerStatus(PerformerStatus.selected);
+    performer.selectPerformer();
     _selectedPerformers.add(_recommendedPerformers[rowIndex]);
     _recommendedPerformers.removeAt(rowIndex);
     _updateRecommendedPerformers();
@@ -65,7 +57,7 @@ class DataStore extends ChangeNotifier {
   void removePerformerFromSelectedPerformers(int rowIndex) {
     logger.i('Removing performer from selected: $rowIndex');
     Performer performer = _selectedPerformers[rowIndex];
-    performer.setPerformerStatus(PerformerStatus.present);
+    performer.unselectPerformer();
     _selectedPerformers.removeAt(rowIndex);
     _updateRecommendedPerformers();
     notifyListeners();
@@ -74,9 +66,7 @@ class DataStore extends ChangeNotifier {
   void finalizeSelectedBand() {
     logger.i('Finalizing selected band');
     for (Performer performer in _selectedPerformers) {
-      performer.setPerformerStatus(PerformerStatus.present);
-      performer.setLastPlayed(DateTime.now());
-      performer.incrementNumberOfTimesPlayed();
+      performer.finalizePerformer();
     }
     _selectedPerformers.clear();
     _sortPerformersByInstrumentMapValues();
