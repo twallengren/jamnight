@@ -15,7 +15,7 @@ class PerformerList extends StatefulWidget {
 class _PerformerListState extends State<PerformerList> {
   @override
   Widget build(BuildContext context) {
-    var dataStore = Provider.of<DataStore>(context, listen: true);
+    DataStore dataStore = Provider.of<DataStore>(context, listen: true);
     return Center(
       child: Column(
         children: [

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../datastore.dart';
 import '../model/instrument/instrument.dart';
 import '../model/performer/experiencelevel.dart';
 import '../model/performer/performer.dart';
@@ -8,9 +10,7 @@ import 'instrumentdropdown.dart';
 import 'performerlist.dart';
 
 class PerformerManager extends StatefulWidget {
-  const PerformerManager({super.key, required this.onPerformerCreated});
-
-  final ValueChanged<Performer> onPerformerCreated;
+  const PerformerManager({super.key});
 
   @override
   State<PerformerManager> createState() => _PerformerManagerState();
@@ -34,24 +34,25 @@ class _PerformerManagerState extends State<PerformerManager> {
     });
   }
 
-  void _createPerformer() {
+  void _createPerformer(DataStore dataStore) {
     final Performer performer = Performer(
       name: _nameController.text,
       instrument: _instrument,
       experienceLevel: _experienceLevel,
       created: DateTime.now(),
     );
-    widget.onPerformerCreated(performer);
+    dataStore.addPerformer(performer);
   }
 
   @override
   Widget build(BuildContext context) {
+    DataStore dataStore = Provider.of<DataStore>(context, listen: true);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text("Performer Manager"),
+          title: const Text('Performer Manager'),
         ),
-        body: Column(
+        body: ListView(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -68,7 +69,7 @@ class _PerformerManagerState extends State<PerformerManager> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
-                onPressed: _createPerformer,
+                onPressed: () => _createPerformer(dataStore),
                 child: const Text('Add Performer'),
               ),
             ),

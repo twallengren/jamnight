@@ -23,9 +23,9 @@ class _BandManagerState extends State<BandManager> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Center(
-          child: Column(
-        children: <Widget>[
+      body: Center(
+          child: ListView(
+        children: const <Widget>[
           RecommendedPerformersWidget(),
           SelectedPerformersWidget(),
         ],
