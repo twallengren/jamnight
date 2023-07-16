@@ -81,12 +81,9 @@ class DataStore extends ChangeNotifier {
 
   void _sortPerformersByInstrumentMapValues() {
     for (Instrument instrument in Instrument.values) {
-      logger.i('Sorting performers for instrument: $instrument');
       List<Performer> performersForInstrument =
           _performersByInstrument[instrument].toList();
-      logger.i('Performers for instrument: $performersForInstrument');
       performersForInstrument.sort();
-      logger.i('Sorted performers for instrument: $performersForInstrument');
       _performersByInstrument.removeAll(instrument);
       _performersByInstrument.addValues(instrument, performersForInstrument);
     }

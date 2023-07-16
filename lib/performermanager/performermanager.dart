@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:jamnight/performermanager/widgets/addperformerbutton.dart';
 import 'package:provider/provider.dart';
 
 import '../datastore.dart';
 import '../model/instrument/instrument.dart';
 import '../model/performer/experiencelevel.dart';
 import '../model/performer/performer.dart';
-import 'experienceleveldropdown.dart';
-import 'instrumentdropdown.dart';
-import 'performerlist.dart';
+import 'widgets/experienceleveldropdown.dart';
+import 'widgets/instrumentdropdown.dart';
+import 'widgets/performerlist.dart';
+import 'widgets/enternamebox.dart';
 
 class PerformerManager extends StatefulWidget {
   const PerformerManager({super.key});
@@ -54,25 +56,12 @@ class _PerformerManagerState extends State<PerformerManager> {
         ),
         body: ListView(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Enter Name',
-                ),
-              ),
-            ),
+            EnterNameBox(nameController: _nameController),
             InstrumentDropdown(onInstrumentSelected: _selectInstrument),
             ExperienceLevelDropdown(
                 onExperienceLevelSelected: _selectExperienceLevel),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: () => _createPerformer(dataStore),
-                child: const Text('Add Performer'),
-              ),
-            ),
+            AddPerformerButton(
+                onAddPerformerPressed: () => _createPerformer(dataStore)),
             const PerformerList()
           ],
         ));

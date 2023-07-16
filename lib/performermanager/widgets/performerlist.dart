@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-import '../datastore.dart';
-import '../model/performer/performer.dart';
+import '../../datastore.dart';
+import '../../model/performer/performer.dart';
 
 class PerformerList extends StatefulWidget {
   const PerformerList({super.key});
