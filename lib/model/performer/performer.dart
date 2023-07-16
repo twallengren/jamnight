@@ -3,7 +3,7 @@ import 'package:jamnight/model/performer/experiencelevel.dart';
 import '../instrument/instrument.dart';
 import 'performerstatus.dart';
 
-class Performer {
+class Performer implements Comparable<Performer> {
   Performer({
     required this.name,
     required this.instrument,
@@ -65,5 +65,16 @@ class Performer {
   @override
   String toString() {
     return 'Performer(name: $name, instrument: $instrument, experienceLevel: $experienceLevel)';
+  }
+
+  @override
+  int compareTo(Performer other) {
+    int numberOfTimesPlayedComparison =
+        _numberOfTimesPlayed.compareTo(other.getNumberOfTimesPlayed());
+    if (numberOfTimesPlayedComparison == 0) {
+      return getLastPlayed().compareTo(other.getLastPlayed());
+    } else {
+      return numberOfTimesPlayedComparison;
+    }
   }
 }

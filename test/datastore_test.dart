@@ -7,7 +7,6 @@ import 'package:jamnight/model/instrument/instrument.dart';
 void main() {
   group('DataStore', () {
     final DateTime now = DateTime.now();
-
     late DataStore dataStore;
     late Performer guitaristA;
     late Performer guitaristB;
@@ -114,7 +113,6 @@ void main() {
       expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristB)));
     });
 
-    // test that movePerformerFromRecommendedToSelected(int index) works correctly
     test('should move a performer from recommended to selected correctly', () {
       dataStore.addPerformer(guitaristA);
       dataStore.addPerformer(guitaristB);
@@ -131,6 +129,33 @@ void main() {
           isTrue);
       expect(dataStore.getRecommendedPerformers(), contains(guitaristB));
       expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristB)));
+    });
+
+    test('should remove a performer from selected correctly', () {
+      dataStore.addPerformer(guitaristA);
+      dataStore.movePerformerFromRecommendedToSelected(0);
+      dataStore.removePerformerFromSelectedPerformers(0);
+
+      expect(dataStore.getPerformers(), contains(guitaristA));
+      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
+          isTrue);
+      expect(dataStore.getRecommendedPerformers(), contains(guitaristA));
+      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristA)));
+    });
+
+    // test that finalizeSelectedBand() works as expected
+    test('should finalize selected band correctly', () {
+      dataStore.addPerformer(guitaristA);
+      dataStore.movePerformerFromRecommendedToSelected(0);
+      dataStore.finalizeSelectedBand();
+
+      expect(dataStore.getPerformers(), contains(guitaristA));
+      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
+          isTrue);
+      expect(dataStore.getRecommendedPerformers(), contains(guitaristA));
+      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristA)));
+      expect(guitaristA.getNumberOfTimesPlayed(), equals(1));
+      expect(guitaristA.getLastPlayed().isAfter(now), isTrue);
     });
   });
 }

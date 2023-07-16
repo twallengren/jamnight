@@ -26,20 +26,8 @@ class BandSelector {
         }
       }
     }
-    nonPriorityPlayers.sort((Performer performerA, Performer performerB) =>
-        _performerComparison(performerA, performerB));
+    nonPriorityPlayers.sort();
     recommendedPerformers.addAll(nonPriorityPlayers);
     return recommendedPerformers;
-  }
-
-  static int _performerComparison(Performer performerA, Performer performerB) {
-    int numberOfTimesPlayedComparison = performerA
-        .getNumberOfTimesPlayed()
-        .compareTo(performerB.getNumberOfTimesPlayed());
-    if (numberOfTimesPlayedComparison == 0) {
-      return performerA.getLastPlayed().compareTo(performerB.getLastPlayed());
-    } else {
-      return numberOfTimesPlayedComparison;
-    }
   }
 }

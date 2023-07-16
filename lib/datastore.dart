@@ -84,23 +84,10 @@ class DataStore extends ChangeNotifier {
       List<Performer> performersForInstrument =
           _performersByInstrument[instrument].toList();
       logger.i('Performers for instrument: $performersForInstrument');
-      performersForInstrument.sort(
-          (Performer performerA, Performer performerB) =>
-              _performerComparison(performerA, performerB));
+      performersForInstrument.sort();
       logger.i('Sorted performers for instrument: $performersForInstrument');
       _performersByInstrument.removeAll(instrument);
       _performersByInstrument.addValues(instrument, performersForInstrument);
-    }
-  }
-
-  int _performerComparison(Performer performerA, Performer performerB) {
-    int numberOfTimesPlayedComparison = performerA
-        .getNumberOfTimesPlayed()
-        .compareTo(performerB.getNumberOfTimesPlayed());
-    if (numberOfTimesPlayedComparison == 0) {
-      return performerA.getLastPlayed().compareTo(performerB.getLastPlayed());
-    } else {
-      return numberOfTimesPlayedComparison;
     }
   }
 
