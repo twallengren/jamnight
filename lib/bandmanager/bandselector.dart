@@ -1,7 +1,8 @@
 import 'package:quiver/collection.dart';
-import '../model/performer/performer.dart';
-import '../model/instrument/instrument.dart';
+
 import '../datastore.dart';
+import '../model/instrument/instrument.dart';
+import '../model/performer/performer.dart';
 import '../model/performer/performerstatus.dart';
 
 class BandSelector {

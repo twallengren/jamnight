@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:jamnight/bandmanager/bandselector.dart';
 import 'package:logger/logger.dart';
 import 'package:quiver/collection.dart';
-import 'model/performer/performer.dart';
+
 import 'model/instrument/instrument.dart';
+import 'model/performer/performer.dart';
 
 class DataStore extends ChangeNotifier {
   final Logger logger = Logger();

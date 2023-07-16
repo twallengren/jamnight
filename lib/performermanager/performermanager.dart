@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../model/performer/performer.dart';
-import 'performerlist.dart';
+
 import '../model/instrument/instrument.dart';
-import 'instrumentdropdown.dart';
 import '../model/performer/experiencelevel.dart';
+import '../model/performer/performer.dart';
 import 'experienceleveldropdown.dart';
+import 'instrumentdropdown.dart';
+import 'performerlist.dart';
 
 class PerformerManager extends StatefulWidget {
   const PerformerManager({super.key, required this.onPerformerCreated});

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+
+import 'bandmanager/bandmanager.dart';
+import 'datastore.dart';
 import 'homepage/homepage.dart';
 import 'performermanager/performermanager.dart';
-import 'datastore.dart';
-import 'bandmanager/bandmanager.dart';
 
 class JamNight extends StatefulWidget {
   const JamNight({super.key});
