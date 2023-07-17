@@ -6,7 +6,6 @@ import 'package:jamnight/performermanager/addperformerbutton.dart';
 import 'package:jamnight/performermanager/experienceleveldropdown.dart';
 import 'package:jamnight/performermanager/instrumentdropdown.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 void main() {
   group('PerformerManager widget', () {
