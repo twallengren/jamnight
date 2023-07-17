@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jamnight/model/performer/experiencelevel.dart';
-import 'package:jamnight/performermanager/widgets/experienceleveldropdown.dart';
+import 'package:jamnight/performermanager/components/experienceleveldropdown.dart';
 
 void main() {
   group('ExperienceLevelDropdown widget', () {

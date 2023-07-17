@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jamnight/performermanager/widgets/enternamebox.dart';
+import 'package:jamnight/performermanager/enternamebox.dart';
 
 void main() {
   group('EnterNameBox widget', () {

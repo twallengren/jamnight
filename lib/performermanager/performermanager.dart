@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:jamnight/performermanager/widgets/addperformerbutton.dart';
 import 'package:provider/provider.dart';
 
 import '../datastore.dart';
 import '../model/instrument/instrument.dart';
 import '../model/performer/experiencelevel.dart';
 import '../model/performer/performer.dart';
-import 'widgets/experienceleveldropdown.dart';
-import 'widgets/instrumentdropdown.dart';
-import 'widgets/performerlist.dart';
-import 'widgets/enternamebox.dart';
+import 'addperformerbutton.dart';
+import 'experienceleveldropdown.dart';
+import 'instrumentdropdown.dart';
+import 'performerlist.dart';
+import 'enternamebox.dart';
 
 class PerformerManager extends StatefulWidget {
   const PerformerManager({super.key});

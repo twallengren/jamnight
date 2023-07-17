@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jamnight/datastore.dart';
-import 'package:jamnight/performermanager/widgets/performerlist.dart';
+import 'package:jamnight/performermanager/performerlist.dart';
 import 'package:provider/provider.dart';
 
 void main() {

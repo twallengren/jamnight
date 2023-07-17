@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jamnight/model/instrument/instrument.dart';
-import 'package:jamnight/performermanager/widgets/instrumentdropdown.dart';
+import 'package:jamnight/performermanager/components/instrumentdropdown.dart';
 
 void main() {
   group('InstrumentDropdown widget', () {

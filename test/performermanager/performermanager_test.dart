@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jamnight/datastore.dart';
 import 'package:jamnight/performermanager/performermanager.dart';
-import 'package:jamnight/performermanager/widgets/addperformerbutton.dart';
-import 'package:jamnight/performermanager/widgets/experienceleveldropdown.dart';
-import 'package:jamnight/performermanager/widgets/instrumentdropdown.dart';
+import 'package:jamnight/performermanager/addperformerbutton.dart';
+import 'package:jamnight/performermanager/experienceleveldropdown.dart';
+import 'package:jamnight/performermanager/instrumentdropdown.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 void main() {
   group('PerformerManager widget', () {
