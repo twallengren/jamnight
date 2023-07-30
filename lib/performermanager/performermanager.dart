@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import '../model/performer/performer.dart';
-import 'performerlist.dart';
+import 'package:provider/provider.dart';
+
+import '../datastore.dart';
 import '../model/instrument/instrument.dart';
-import 'instrumentdropdown.dart';
-import '../model/experiencelevel.dart';
+import '../model/performer/experiencelevel.dart';
+import '../model/performer/performer.dart';
+import 'addperformerbutton.dart';
 import 'experienceleveldropdown.dart';
+import 'instrumentdropdown.dart';
+import 'performerlist.dart';
+import 'enternamebox.dart';
 
 class PerformerManager extends StatefulWidget {
-  const PerformerManager({super.key, required this.onPerformerCreated});
-
-  final ValueChanged<Performer> onPerformerCreated;
+  const PerformerManager({super.key});
 
   @override
   State<PerformerManager> createState() => _PerformerManagerState();
@@ -33,44 +36,32 @@ class _PerformerManagerState extends State<PerformerManager> {
     });
   }
 
-  void _createPerformer() {
+  void _createPerformer(DataStore dataStore) {
     final Performer performer = Performer(
       name: _nameController.text,
       instrument: _instrument,
       experienceLevel: _experienceLevel,
       created: DateTime.now(),
     );
-    widget.onPerformerCreated(performer);
+    dataStore.addPerformer(performer);
   }
 
   @override
   Widget build(BuildContext context) {
+    DataStore dataStore = Provider.of<DataStore>(context, listen: true);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text("Performer Manager"),
+          title: const Text('Performer Manager'),
         ),
-        body: Column(
+        body: ListView(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Enter Name',
-                ),
-              ),
-            ),
+            EnterNameBox(nameController: _nameController),
             InstrumentDropdown(onInstrumentSelected: _selectInstrument),
             ExperienceLevelDropdown(
                 onExperienceLevelSelected: _selectExperienceLevel),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: _createPerformer,
-                child: const Text('Add Performer'),
-              ),
-            ),
+            AddPerformerButton(
+                onAddPerformerPressed: () => _createPerformer(dataStore)),
             const PerformerList()
           ],
         ));

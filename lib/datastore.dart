@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jamnight/bandmanager/bandselector.dart';
 import 'package:logger/logger.dart';
 import 'package:quiver/collection.dart';
-import 'model/performer/performer.dart';
+
 import 'model/instrument/instrument.dart';
+import 'model/performer/performer.dart';
 import 'model/performer/performerstatus.dart';
 
 class DataStore extends ChangeNotifier {
@@ -17,17 +17,10 @@ class DataStore extends ChangeNotifier {
 
   void addPerformer(Performer performer) {
     logger.i('Adding performer: ${performer.name}');
-
-    // list of all performers
     _performers.add(performer);
-
-    // multimap of performers by instrument
     _performersByInstrument.add(performer.instrument, performer);
     _sortPerformersByInstrumentMapValues();
-
-    // update recommended performers
     _updateRecommendedPerformers();
-
     notifyListeners();
   }
 
@@ -55,7 +48,7 @@ class DataStore extends ChangeNotifier {
   void movePerformerFromRecommendedToSelected(int rowIndex) {
     logger.i('Moving performer from recommended to selected: $rowIndex');
     Performer performer = _recommendedPerformers[rowIndex];
-    performer.setPerformerStatus(PerformerStatus.selected);
+    performer.selectPerformer();
     _selectedPerformers.add(_recommendedPerformers[rowIndex]);
     _recommendedPerformers.removeAt(rowIndex);
     _updateRecommendedPerformers();
@@ -65,7 +58,7 @@ class DataStore extends ChangeNotifier {
   void removePerformerFromSelectedPerformers(int rowIndex) {
     logger.i('Removing performer from selected: $rowIndex');
     Performer performer = _selectedPerformers[rowIndex];
-    performer.setPerformerStatus(PerformerStatus.present);
+    performer.unselectPerformer();
     _selectedPerformers.removeAt(rowIndex);
     _updateRecommendedPerformers();
     notifyListeners();
@@ -74,9 +67,7 @@ class DataStore extends ChangeNotifier {
   void finalizeSelectedBand() {
     logger.i('Finalizing selected band');
     for (Performer performer in _selectedPerformers) {
-      performer.setPerformerStatus(PerformerStatus.present);
-      performer.setLastPlayed(DateTime.now());
-      performer.incrementNumberOfTimesPlayed();
+      performer.finalizePerformer();
     }
     _selectedPerformers.clear();
     _sortPerformersByInstrumentMapValues();
@@ -85,32 +76,16 @@ class DataStore extends ChangeNotifier {
   }
 
   void _updateRecommendedPerformers() {
-    _recommendedPerformers = BandSelector.getRecommendedPerformers(this);
+    _recommendedPerformers = _getRecommendedPerformers(this);
   }
 
   void _sortPerformersByInstrumentMapValues() {
     for (Instrument instrument in Instrument.values) {
-      logger.i('Sorting performers for instrument: $instrument');
       List<Performer> performersForInstrument =
           _performersByInstrument[instrument].toList();
-      logger.i('Performers for instrument: $performersForInstrument');
-      performersForInstrument.sort(
-          (Performer performerA, Performer performerB) =>
-              _performerComparison(performerA, performerB));
-      logger.i('Sorted performers for instrument: $performersForInstrument');
+      performersForInstrument.sort();
       _performersByInstrument.removeAll(instrument);
       _performersByInstrument.addValues(instrument, performersForInstrument);
-    }
-  }
-
-  int _performerComparison(Performer performerA, Performer performerB) {
-    int numberOfTimesPlayedComparison = performerA
-        .getNumberOfTimesPlayed()
-        .compareTo(performerB.getNumberOfTimesPlayed());
-    if (numberOfTimesPlayedComparison == 0) {
-      return performerA.getLastPlayed().compareTo(performerB.getLastPlayed());
-    } else {
-      return numberOfTimesPlayedComparison;
     }
   }
 
@@ -128,5 +103,31 @@ class DataStore extends ChangeNotifier {
 
   Multimap<Instrument, Performer> getPerformersByInstrument() {
     return _performersByInstrument;
+  }
+
+  static List<Performer> _getRecommendedPerformers(DataStore dataStore) {
+    Multimap<Instrument, Performer> performersByInstrument =
+        dataStore.getPerformersByInstrument();
+    List<Performer> recommendedPerformers = [];
+    List<Performer> nonPriorityPlayers = [];
+
+    for (Instrument instrument in Instrument.values) {
+      List<Performer> performersForInstrument =
+          performersByInstrument[instrument].toList();
+      bool priorityPlayerNotFound = true;
+      for (Performer performer in performersForInstrument) {
+        if (priorityPlayerNotFound &&
+            performer.getPerformerStatus() != PerformerStatus.selected) {
+          performer.recommendPerformer();
+          recommendedPerformers.add(performer);
+          priorityPlayerNotFound = false;
+        } else if (performer.getPerformerStatus() != PerformerStatus.selected) {
+          nonPriorityPlayers.add(performer);
+        }
+      }
+    }
+    nonPriorityPlayers.sort();
+    recommendedPerformers.addAll(nonPriorityPlayers);
+    return recommendedPerformers;
   }
 }

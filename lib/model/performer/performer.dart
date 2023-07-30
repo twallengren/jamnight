@@ -1,9 +1,9 @@
-import 'package:jamnight/model/experiencelevel.dart';
+import 'package:jamnight/model/performer/experiencelevel.dart';
 
 import '../instrument/instrument.dart';
 import 'performerstatus.dart';
 
-class Performer {
+class Performer implements Comparable<Performer> {
   Performer({
     required this.name,
     required this.instrument,
@@ -19,10 +19,6 @@ class Performer {
   PerformerStatus _status = PerformerStatus.present;
   int _numberOfTimesPlayed = 0;
 
-  void setLastPlayed(DateTime dateTime) {
-    _lastPlayed = dateTime;
-  }
-
   DateTime getLastPlayed() {
     if (_lastPlayed == null) {
       return created;
@@ -30,20 +26,36 @@ class Performer {
     return _lastPlayed!;
   }
 
-  void setPerformerStatus(PerformerStatus performerStatus) {
-    _status = performerStatus;
-  }
-
   PerformerStatus getPerformerStatus() {
     return _status;
   }
 
-  void incrementNumberOfTimesPlayed() {
-    _numberOfTimesPlayed++;
-  }
-
   int getNumberOfTimesPlayed() {
     return _numberOfTimesPlayed;
+  }
+
+  void recommendPerformer() {
+    _status = PerformerStatus.recommended;
+  }
+
+  void selectPerformer() {
+    _status = PerformerStatus.selected;
+  }
+
+  void unselectPerformer() {
+    if (_status != PerformerStatus.selected) {
+      throw Exception('Cannot unselect a performer that is not selected');
+    }
+    _status = PerformerStatus.present;
+  }
+
+  void finalizePerformer() {
+    if (_status != PerformerStatus.selected) {
+      throw Exception('Cannot finalize a performer that is not selected');
+    }
+    _status = PerformerStatus.present;
+    _lastPlayed = DateTime.now();
+    _numberOfTimesPlayed++;
   }
 
   @override
@@ -59,5 +71,16 @@ class Performer {
   @override
   String toString() {
     return 'Performer(name: $name, instrument: $instrument, experienceLevel: $experienceLevel)';
+  }
+
+  @override
+  int compareTo(Performer other) {
+    int numberOfTimesPlayedComparison =
+        _numberOfTimesPlayed.compareTo(other.getNumberOfTimesPlayed());
+    if (numberOfTimesPlayedComparison == 0) {
+      return getLastPlayed().compareTo(other.getLastPlayed());
+    } else {
+      return numberOfTimesPlayedComparison;
+    }
   }
 }
