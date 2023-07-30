@@ -10,7 +10,7 @@ class PerformersDataSource extends DataGridSource {
   final DataStore dataStore;
 
   @override
-  List<DataGridRow> get rows => getPerformerRows(dataStore);
+  List<DataGridRow> get rows => _getPerformerRows(dataStore);
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
@@ -24,7 +24,7 @@ class PerformersDataSource extends DataGridSource {
     }).toList());
   }
 
-  List<DataGridRow> getPerformerRows(DataStore dataStore) {
+  List<DataGridRow> _getPerformerRows(DataStore dataStore) {
     List<DataGridRow> performerRows = [];
 
     List<Performer> selectedPerformers = dataStore.getPerformers();
