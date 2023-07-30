@@ -8,7 +8,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 void main() {
   group('PerformersDataSource', () {
-    test('', () {
+    test('PerformerDataSource rows populate with performer', () {
       Performer guitaristA = Performer(
           name: 'guitaristA',
           instrument: Instrument.guitar,

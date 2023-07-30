@@ -43,10 +43,16 @@ class Performer implements Comparable<Performer> {
   }
 
   void unselectPerformer() {
+    if (_status != PerformerStatus.selected) {
+      throw Exception('Cannot unselect a performer that is not selected');
+    }
     _status = PerformerStatus.present;
   }
 
   void finalizePerformer() {
+    if (_status != PerformerStatus.selected) {
+      throw Exception('Cannot finalize a performer that is not selected');
+    }
     _status = PerformerStatus.present;
     _lastPlayed = DateTime.now();
     _numberOfTimesPlayed++;
