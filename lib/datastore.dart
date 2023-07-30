@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jamnight/bandmanager/bandselector.dart';
 import 'package:logger/logger.dart';
 import 'package:quiver/collection.dart';
 
 import 'model/instrument/instrument.dart';
 import 'model/performer/performer.dart';
+import 'model/performer/performerstatus.dart';
 
 class DataStore extends ChangeNotifier {
   final Logger logger = Logger();
@@ -76,7 +76,7 @@ class DataStore extends ChangeNotifier {
   }
 
   void _updateRecommendedPerformers() {
-    _recommendedPerformers = BandSelector.getRecommendedPerformers(this);
+    _recommendedPerformers = _getRecommendedPerformers(this);
   }
 
   void _sortPerformersByInstrumentMapValues() {
@@ -103,5 +103,31 @@ class DataStore extends ChangeNotifier {
 
   Multimap<Instrument, Performer> getPerformersByInstrument() {
     return _performersByInstrument;
+  }
+
+  static List<Performer> _getRecommendedPerformers(DataStore dataStore) {
+    Multimap<Instrument, Performer> performersByInstrument =
+        dataStore.getPerformersByInstrument();
+    List<Performer> recommendedPerformers = [];
+    List<Performer> nonPriorityPlayers = [];
+
+    for (Instrument instrument in Instrument.values) {
+      List<Performer> performersForInstrument =
+          performersByInstrument[instrument].toList();
+      bool priorityPlayerNotFound = true;
+      for (Performer performer in performersForInstrument) {
+        if (priorityPlayerNotFound &&
+            performer.getPerformerStatus() != PerformerStatus.selected) {
+          performer.recommendPerformer();
+          recommendedPerformers.add(performer);
+          priorityPlayerNotFound = false;
+        } else if (performer.getPerformerStatus() != PerformerStatus.selected) {
+          nonPriorityPlayers.add(performer);
+        }
+      }
+    }
+    nonPriorityPlayers.sort();
+    recommendedPerformers.addAll(nonPriorityPlayers);
+    return recommendedPerformers;
   }
 }
