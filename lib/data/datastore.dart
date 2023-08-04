@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:quiver/collection.dart';
 
-import 'model/instrument/instrument.dart';
-import 'model/performer/performer.dart';
-import 'model/performer/performerstatus.dart';
+import '../model/instrument/instrument.dart';
+import '../model/performer/performer.dart';
+import '../model/performer/performerstatus.dart';
 
 class DataStore extends ChangeNotifier {
   final Logger logger = Logger();
