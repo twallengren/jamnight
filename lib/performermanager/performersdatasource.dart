@@ -5,12 +5,12 @@ import '../data/datastore.dart';
 import '../model/performer/performer.dart';
 
 class PerformersDataSource extends DataGridSource {
-  PerformersDataSource({required this.dataStore});
+  PerformersDataSource({required this.performers});
 
-  final DataStore dataStore;
+  final List<Performer> performers;
 
   @override
-  List<DataGridRow> get rows => _getPerformerRows(dataStore);
+  List<DataGridRow> get rows => _getPerformerRows(performers);
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
@@ -24,12 +24,10 @@ class PerformersDataSource extends DataGridSource {
     }).toList());
   }
 
-  List<DataGridRow> _getPerformerRows(DataStore dataStore) {
+  List<DataGridRow> _getPerformerRows(List<Performer> performers) {
     List<DataGridRow> performerRows = [];
 
-    List<Performer> selectedPerformers = dataStore.getPerformers();
-
-    for (Performer performer in selectedPerformers) {
+    for (Performer performer in performers) {
       performerRows.add(DataGridRow(cells: <DataGridCell>[
         DataGridCell(columnName: 'Name', value: performer.name),
         DataGridCell(

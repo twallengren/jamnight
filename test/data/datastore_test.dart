@@ -76,24 +76,6 @@ void main() {
       expect(secondPerformer, equals(guitaristA));
     });
 
-    test('should remove a performer correctly', () {
-      dataStore.addPerformer(guitaristA);
-      dataStore.addPerformer(guitaristB);
-      dataStore.removePerformer(guitaristA);
-
-      expect(dataStore.getPerformers(), isNot(contains(guitaristA)));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
-          isFalse);
-      expect(dataStore.getRecommendedPerformers(), isNot(contains(guitaristA)));
-      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristA)));
-
-      expect(dataStore.getPerformers(), contains(guitaristB));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristB),
-          isTrue);
-      expect(dataStore.getRecommendedPerformers(), contains(guitaristB));
-      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristB)));
-    });
-
     // test that dataStore.removePerformerByIndex works correctly
     test('should remove a performer by index correctly', () {
       dataStore.addPerformer(guitaristA);

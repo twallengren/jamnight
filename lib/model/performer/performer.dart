@@ -58,6 +58,14 @@ class Performer implements Comparable<Performer> {
     _numberOfTimesPlayed++;
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'instrument': instrument.name,
+      'experience_level': experienceLevel.name,
+    };
+  }
+
   @override
   bool operator ==(Object other) {
     return other is Performer &&

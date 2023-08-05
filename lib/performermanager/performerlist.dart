@@ -3,16 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../data/datastore.dart';
+import '../model/performer/performer.dart';
 import 'performersdatasource.dart';
 
-class PerformerList extends StatefulWidget {
-  const PerformerList({super.key});
+class PerformerList extends StatelessWidget {
+  const PerformerList({super.key, required this.performers});
 
-  @override
-  State<PerformerList> createState() => _PerformerListState();
-}
+  final List<Performer> performers;
 
-class _PerformerListState extends State<PerformerList> {
   @override
   Widget build(BuildContext context) {
     DataStore dataStore = Provider.of<DataStore>(context, listen: true);
@@ -25,7 +23,17 @@ class _PerformerListState extends State<PerformerList> {
             swipeMaxOffset: 100,
             columnWidthMode: ColumnWidthMode.fill,
             horizontalScrollPhysics: const BouncingScrollPhysics(),
-            source: PerformersDataSource(dataStore: dataStore),
+            source: PerformersDataSource(performers: performers),
+            startSwipeActionsBuilder:
+                (BuildContext context, DataGridRow dataGridRow, int rowIndex) {
+              return GestureDetector(
+                onTap: () => dataStore.savePerformer(rowIndex),
+                child: Container(
+                  color: Colors.greenAccent,
+                  child: const Center(child: Icon(Icons.add)),
+                ),
+              );
+            },
             endSwipeActionsBuilder:
                 (BuildContext context, DataGridRow dataGridRow, int rowIndex) {
               return GestureDetector(

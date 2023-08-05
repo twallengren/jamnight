@@ -19,7 +19,7 @@ void main() {
       dataStore.addPerformer(guitaristA);
 
       PerformersDataSource performersDataSource =
-          PerformersDataSource(dataStore: dataStore);
+          PerformersDataSource(performers: dataStore.getPerformers());
       List<DataGridRow> rows = performersDataSource.rows;
 
       expect(rows.length, equals(1));

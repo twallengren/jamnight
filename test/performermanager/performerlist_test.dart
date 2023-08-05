@@ -10,7 +10,9 @@ void main() {
       await tester.pumpWidget(MaterialApp(
           home: ChangeNotifierProvider(
         create: (_) => DataStore(),
-        child: const PerformerList(),
+        child: const PerformerList(
+          performers: [],
+        ),
       )));
     });
   });
