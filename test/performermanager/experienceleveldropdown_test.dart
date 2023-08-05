@@ -10,6 +10,7 @@ void main() {
           home: Scaffold(
               body: ExperienceLevelDropdown(
         onExperienceLevelSelected: (ExperienceLevel experienceLevel) => {},
+        experienceLevel: null,
       ))));
     });
   });

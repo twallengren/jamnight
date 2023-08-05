@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:jamnight/bandmanager/bandmanager.dart';
-import 'package:jamnight/datastore.dart';
+import 'package:jamnight/data/datastore.dart';
 import 'package:jamnight/homepage/homepage.dart';
 import 'package:jamnight/jamnight.dart';
 import 'package:jamnight/performermanager/performermanager.dart';

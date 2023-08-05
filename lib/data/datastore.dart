@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:quiver/collection.dart';
 
-import 'model/instrument/instrument.dart';
-import 'model/performer/performer.dart';
-import 'model/performer/performerstatus.dart';
+import '../model/instrument/instrument.dart';
+import '../model/performer/performer.dart';
+import '../model/performer/performerstatus.dart';
+import 'jamnightdao.dart';
 
 class DataStore extends ChangeNotifier {
   final Logger logger = Logger();
-
+  final JamNightDAO _jamNightDAO = JamNightDAO.instance;
   final List<Performer> _performers = [];
   final Multimap<Instrument, Performer> _performersByInstrument =
       Multimap<Instrument, Performer>();
-  List<Performer> _recommendedPerformers = [];
+  final List<Performer> _recommendedPerformers = [];
   final List<Performer> _selectedPerformers = [];
 
   void addPerformer(Performer performer) {
@@ -20,16 +21,6 @@ class DataStore extends ChangeNotifier {
     _performers.add(performer);
     _performersByInstrument.add(performer.instrument, performer);
     _sortPerformersByInstrumentMapValues();
-    _updateRecommendedPerformers();
-    notifyListeners();
-  }
-
-  void removePerformer(Performer performer) {
-    logger.i('Removing performer: ${performer.name}');
-    _performers.remove(performer);
-    _performersByInstrument
-        .removeWhere((Instrument instrument, Performer p) => p == performer);
-    _selectedPerformers.remove(performer);
     _updateRecommendedPerformers();
     notifyListeners();
   }
@@ -75,8 +66,15 @@ class DataStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  void savePerformer(int rowIndex) {
+    Performer performer = _performers[rowIndex];
+    logger.i('Saving performer: ${performer.name}');
+    _jamNightDAO.insertPerformer(performer);
+  }
+
   void _updateRecommendedPerformers() {
-    _recommendedPerformers = _getRecommendedPerformers(this);
+    _recommendedPerformers.clear();
+    _recommendedPerformers.addAll(_getRecommendedPerformers(this));
   }
 
   void _sortPerformersByInstrumentMapValues() {
@@ -103,6 +101,10 @@ class DataStore extends ChangeNotifier {
 
   Multimap<Instrument, Performer> getPerformersByInstrument() {
     return _performersByInstrument;
+  }
+
+  Future<List<Performer>> getSavedPerformers() {
+    return _jamNightDAO.getPerformers();
   }
 
   static List<Performer> _getRecommendedPerformers(DataStore dataStore) {

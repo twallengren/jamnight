@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../datastore.dart';
+import '../data/datastore.dart';
 import '../model/instrument/instrument.dart';
 import '../model/performer/experiencelevel.dart';
 import '../model/performer/performer.dart';
 import 'addperformerbutton.dart';
+import 'enternamebox.dart';
 import 'experienceleveldropdown.dart';
 import 'instrumentdropdown.dart';
 import 'performerlist.dart';
-import 'enternamebox.dart';
+import 'selectregulardropdown.dart';
 
 class PerformerManager extends StatefulWidget {
   const PerformerManager({super.key});
@@ -21,8 +22,17 @@ class PerformerManager extends StatefulWidget {
 class _PerformerManagerState extends State<PerformerManager> {
   final TextEditingController _nameController = TextEditingController();
 
-  Instrument _instrument = Instrument.guitar;
-  ExperienceLevel _experienceLevel = ExperienceLevel.beginner;
+  Performer? _savedPerformer;
+  Instrument? _instrument;
+  ExperienceLevel? _experienceLevel;
+
+  void _selectSavedPerformer(Performer performer) {
+    setState(() {
+      _nameController.text = performer.name;
+      _instrument = performer.instrument;
+      _experienceLevel = performer.experienceLevel;
+    });
+  }
 
   void _selectInstrument(Instrument instrument) {
     setState(() {
@@ -36,14 +46,21 @@ class _PerformerManagerState extends State<PerformerManager> {
     });
   }
 
-  void _createPerformer(DataStore dataStore) {
+  void _addPerformer(DataStore dataStore) {
     final Performer performer = Performer(
       name: _nameController.text,
-      instrument: _instrument,
-      experienceLevel: _experienceLevel,
+      instrument: _instrument!,
+      experienceLevel: _experienceLevel!,
       created: DateTime.now(),
     );
     dataStore.addPerformer(performer);
+
+    setState(() {
+      _nameController.clear();
+      _savedPerformer = null;
+      _instrument = null;
+      _experienceLevel = null;
+    });
   }
 
   @override
@@ -56,13 +73,19 @@ class _PerformerManagerState extends State<PerformerManager> {
         ),
         body: ListView(
           children: <Widget>[
+            SelectRegularDropdown(
+                savedPerformer: _savedPerformer,
+                onPerformerSelected: _selectSavedPerformer),
             EnterNameBox(nameController: _nameController),
-            InstrumentDropdown(onInstrumentSelected: _selectInstrument),
+            InstrumentDropdown(
+                instrument: _instrument,
+                onInstrumentSelected: _selectInstrument),
             ExperienceLevelDropdown(
+                experienceLevel: _experienceLevel,
                 onExperienceLevelSelected: _selectExperienceLevel),
             AddPerformerButton(
-                onAddPerformerPressed: () => _createPerformer(dataStore)),
-            const PerformerList()
+                onAddPerformerPressed: () => _addPerformer(dataStore)),
+            PerformerList(performers: dataStore.getPerformers())
           ],
         ));
   }

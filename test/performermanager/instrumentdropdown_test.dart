@@ -10,6 +10,7 @@ void main() {
           home: Scaffold(
               body: InstrumentDropdown(
         onInstrumentSelected: (Instrument instrument) => {},
+        instrument: null,
       ))));
     });
   });
