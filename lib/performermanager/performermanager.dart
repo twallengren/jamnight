@@ -25,7 +25,6 @@ class _PerformerManagerState extends State<PerformerManager> {
   Performer? _savedPerformer;
   Instrument? _instrument;
   ExperienceLevel? _experienceLevel;
-  final List<Performer> _performers = [];
 
   void _selectSavedPerformer(Performer performer) {
     setState(() {
@@ -61,7 +60,6 @@ class _PerformerManagerState extends State<PerformerManager> {
       _savedPerformer = null;
       _instrument = null;
       _experienceLevel = null;
-      _performers.add(performer);
     });
   }
 
@@ -87,7 +85,7 @@ class _PerformerManagerState extends State<PerformerManager> {
                 onExperienceLevelSelected: _selectExperienceLevel),
             AddPerformerButton(
                 onAddPerformerPressed: () => _addPerformer(dataStore)),
-            PerformerList(performers: _performers)
+            PerformerList(performers: dataStore.getPerformers())
           ],
         ));
   }
