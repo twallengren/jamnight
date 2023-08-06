@@ -5,6 +5,7 @@ import '../data/datastore.dart';
 import '../model/instrument/instrument.dart';
 import '../model/performer/experiencelevel.dart';
 import '../model/performer/performer.dart';
+import '../model/performer/performerstatus.dart';
 import 'addperformerbutton.dart';
 import 'enternamebox.dart';
 import 'experienceleveldropdown.dart';
@@ -28,6 +29,7 @@ class _PerformerManagerState extends State<PerformerManager> {
 
   void _selectSavedPerformer(Performer performer) {
     setState(() {
+      _savedPerformer = performer;
       _nameController.text = performer.name;
       _instrument = performer.instrument;
       _experienceLevel = performer.experienceLevel;
@@ -47,13 +49,21 @@ class _PerformerManagerState extends State<PerformerManager> {
   }
 
   void _addPerformer(DataStore dataStore) {
-    final Performer performer = Performer(
-      name: _nameController.text,
-      instrument: _instrument!,
-      experienceLevel: _experienceLevel!,
-      created: DateTime.now(),
-    );
-    dataStore.addPerformer(performer);
+
+    if (_savedPerformer == null) {
+      final Performer performer = Performer(
+          name: _nameController.text,
+          instrument: _instrument!,
+          experienceLevel: _experienceLevel!,
+          created: DateTime.now(),
+          status: PerformerStatus.present,
+          isJamRegular: false,
+          lastPlayed: DateTime.now(),
+          numberOfTimesPlayed: 0);
+      dataStore.addPerformerToCurrentJam(performer);
+    } else {
+      dataStore.addPerformerToCurrentJam(_savedPerformer!);
+    }
 
     setState(() {
       _nameController.clear();
@@ -85,7 +95,7 @@ class _PerformerManagerState extends State<PerformerManager> {
                 onExperienceLevelSelected: _selectExperienceLevel),
             AddPerformerButton(
                 onAddPerformerPressed: () => _addPerformer(dataStore)),
-            PerformerList(performers: dataStore.getPerformers())
+            PerformerList(performers: dataStore.currentJamPerformers)
           ],
         ));
   }

@@ -17,7 +17,7 @@ class SelectRegularDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     DataStore dataStore = Provider.of<DataStore>(context, listen: true);
     return FutureBuilder<List<Performer>>(
-        future: dataStore.getSavedPerformers(),
+        future: dataStore.getJamNightRegularsNotInCurrentJam(),
         builder:
             (BuildContext context, AsyncSnapshot<List<Performer>> snapshot) {
           if (snapshot.hasData) {

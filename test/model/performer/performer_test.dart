@@ -6,7 +6,8 @@ import 'package:jamnight/model/performer/performerstatus.dart';
 
 void main() {
   group('Performer', () {
-    DateTime created = DateTime.now();
+    DateTime now = DateTime.now();
+    DateTime nowPlusOne = now.add(const Duration(seconds: 1));
     late Performer guitaristA;
 
     setUp(() {
@@ -14,7 +15,11 @@ void main() {
           name: 'guitaristA',
           instrument: Instrument.guitar,
           experienceLevel: ExperienceLevel.beginner,
-          created: created);
+          created: now,
+          status: PerformerStatus.present,
+          isJamRegular: false,
+          lastPlayed: now,
+          numberOfTimesPlayed: 0);
     });
 
     test(
@@ -24,7 +29,11 @@ void main() {
           name: 'guitaristA',
           instrument: Instrument.guitar,
           experienceLevel: ExperienceLevel.intermediate,
-          created: created.add(const Duration(seconds: 1)));
+          created: nowPlusOne,
+          status: PerformerStatus.present,
+          isJamRegular: false,
+          lastPlayed: nowPlusOne,
+          numberOfTimesPlayed: 0);
       expect(guitaristA, equals(guitaristB));
     });
 
@@ -33,7 +42,11 @@ void main() {
           name: 'guitaristB',
           instrument: Instrument.guitar,
           experienceLevel: ExperienceLevel.intermediate,
-          created: created.add(const Duration(seconds: 1)));
+          created: nowPlusOne,
+          status: PerformerStatus.present,
+          isJamRegular: false,
+          lastPlayed: nowPlusOne,
+          numberOfTimesPlayed: 0);
       expect(guitaristA, isNot(equals(guitaristB)));
     });
 
@@ -44,27 +57,23 @@ void main() {
           name: 'guitaristA',
           instrument: Instrument.bass,
           experienceLevel: ExperienceLevel.intermediate,
-          created: created.add(const Duration(seconds: 1)));
+          created: nowPlusOne,
+          status: PerformerStatus.present,
+          isJamRegular: false,
+          lastPlayed: nowPlusOne,
+          numberOfTimesPlayed: 0);
       expect(guitaristA, isNot(equals(bassist)));
-    });
-
-    test('getLastPlayed returns created if lastPlayed is null', () {
-      expect(guitaristA.getLastPlayed(), equals(created));
-    });
-
-    test('getPerformerStatus returns present if not selected', () {
-      expect(guitaristA.getPerformerStatus(), equals(PerformerStatus.present));
     });
 
     test('selectPerformer changes status to selected', () {
       guitaristA.selectPerformer();
-      expect(guitaristA.getPerformerStatus(), equals(PerformerStatus.selected));
+      expect(guitaristA.status, equals(PerformerStatus.selected));
     });
 
     test('unselectPerformer changes status to present', () {
       guitaristA.selectPerformer();
       guitaristA.unselectPerformer();
-      expect(guitaristA.getPerformerStatus(), equals(PerformerStatus.present));
+      expect(guitaristA.status, equals(PerformerStatus.present));
     });
 
     test('unselectPerformer throws exception if performer not selected', () {
@@ -74,8 +83,7 @@ void main() {
 
     test('recommendPerformer changes status to recommended', () {
       guitaristA.recommendPerformer();
-      expect(
-          guitaristA.getPerformerStatus(), equals(PerformerStatus.recommended));
+      expect(guitaristA.status, equals(PerformerStatus.recommended));
     });
 
     test(
@@ -83,9 +91,9 @@ void main() {
         () {
       guitaristA.selectPerformer();
       guitaristA.finalizePerformer();
-      expect(guitaristA.getPerformerStatus(), equals(PerformerStatus.present));
-      expect(guitaristA.getLastPlayed().isAfter(created), isTrue);
-      expect(guitaristA.getNumberOfTimesPlayed(), equals(1));
+      expect(guitaristA.status, equals(PerformerStatus.present));
+      expect(guitaristA.lastPlayed.isAfter(now), isTrue);
+      expect(guitaristA.numberOfTimesPlayed, equals(1));
     });
 
     test('finalizePerformer throws exception if performer not selected', () {
@@ -98,7 +106,11 @@ void main() {
           name: 'guitaristB',
           instrument: Instrument.guitar,
           experienceLevel: ExperienceLevel.beginner,
-          created: created.add(const Duration(seconds: 1)));
+          created: nowPlusOne,
+          status: PerformerStatus.present,
+          isJamRegular: false,
+          lastPlayed: nowPlusOne,
+          numberOfTimesPlayed: 0);
       expect(guitaristA.compareTo(guitaristB), equals(-1));
       expect(guitaristB.compareTo(guitaristA), equals(1));
     });
@@ -110,7 +122,11 @@ void main() {
           name: 'guitaristB',
           instrument: Instrument.guitar,
           experienceLevel: ExperienceLevel.beginner,
-          created: created.add(const Duration(seconds: 1)));
+          created: nowPlusOne,
+          status: PerformerStatus.present,
+          isJamRegular: false,
+          lastPlayed: nowPlusOne,
+          numberOfTimesPlayed: 0);
       expect(guitaristA.compareTo(guitaristB), equals(1));
       expect(guitaristB.compareTo(guitaristA), equals(-1));
     });

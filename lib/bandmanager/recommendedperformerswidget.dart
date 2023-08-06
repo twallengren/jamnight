@@ -87,7 +87,7 @@ class RecommendedPerformersDataSource extends DataGridSource {
     List<DataGridRow> bandRows = [];
 
     List<Performer> recommendedPerformers =
-        dataStore.getRecommendedPerformers();
+        dataStore.recommendedPerformers;
 
     for (Performer performer in recommendedPerformers) {
       bandRows.add(DataGridRow(cells: <DataGridCell>[
@@ -96,8 +96,8 @@ class RecommendedPerformersDataSource extends DataGridSource {
             columnName: 'Instrument',
             value: performer.instrument.name.toUpperCase()),
         DataGridCell(
-            columnName: 'Experience Level',
-            value: performer.getNumberOfTimesPlayed()),
+            columnName: 'Number of Times Played',
+            value: performer.numberOfTimesPlayed),
       ]));
     }
 
