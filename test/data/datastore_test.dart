@@ -3,10 +3,12 @@ import 'package:jamnight/model/performer/experiencelevel.dart';
 import 'package:jamnight/data/datastore.dart';
 import 'package:jamnight/model/performer/performer.dart';
 import 'package:jamnight/model/instrument/instrument.dart';
+import 'package:jamnight/model/performer/performerstatus.dart';
 
 void main() {
   group('DataStore', () {
     final DateTime now = DateTime.now();
+    final DateTime nowPlusOne = now.add(const Duration(seconds: 1));
     late DataStore dataStore;
     late Performer guitaristA;
     late Performer guitaristB;
@@ -17,39 +19,47 @@ void main() {
           name: 'guitaristA',
           instrument: Instrument.guitar,
           experienceLevel: ExperienceLevel.beginner,
-          created: now);
+          created: now,
+          status: PerformerStatus.present,
+          isJamRegular: false,
+          lastPlayed: now,
+          numberOfTimesPlayed: 0);
       guitaristB = Performer(
           name: 'guitaristB',
           instrument: guitaristA.instrument,
           experienceLevel: ExperienceLevel.beginner,
-          created: now.add(const Duration(seconds: 1)));
+          created: nowPlusOne,
+          status: PerformerStatus.present,
+          isJamRegular: false,
+          lastPlayed: nowPlusOne,
+          numberOfTimesPlayed: 0);
     });
 
     test('addPerformer adds to both performers and performersByInstrument', () {
-      dataStore.addPerformer(guitaristA);
-      dataStore.addPerformer(guitaristB);
+      dataStore.addPerformerToCurrentJam(guitaristA);
+      dataStore.addPerformerToCurrentJam(guitaristB);
 
-      expect(dataStore.getPerformers(), contains(guitaristA));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
-          isTrue);
-      expect(dataStore.getRecommendedPerformers(), contains(guitaristA));
-      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristA)));
+      expect(dataStore.allPerformers, contains(guitaristA));
+      expect(
+          dataStore.performersByInstrument.containsValue(guitaristA), isTrue);
+      expect(dataStore.recommendedPerformers, contains(guitaristA));
+      expect(dataStore.selectedPerformers, isNot(contains(guitaristA)));
 
-      expect(dataStore.getPerformers(), contains(guitaristB));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristB),
-          isTrue);
-      expect(dataStore.getRecommendedPerformers(), contains(guitaristB));
-      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristB)));
+      expect(dataStore.allPerformers, contains(guitaristB));
+      expect(
+          dataStore.performersByInstrument.containsValue(guitaristB), isTrue);
+      expect(dataStore.recommendedPerformers, contains(guitaristB));
+      expect(dataStore.selectedPerformers, isNot(contains(guitaristB)));
     });
 
     test('addPerformer prioritizes performers by last time played', () {
-      dataStore.addPerformer(guitaristA);
-      dataStore.addPerformer(guitaristB);
+      dataStore.addPerformerToCurrentJam(guitaristA);
+      dataStore.addPerformerToCurrentJam(guitaristB);
 
-      expect(dataStore.getPerformers(), contains(guitaristA));
-      expect(dataStore.getPerformers(), contains(guitaristB));
+      expect(dataStore.allPerformers, contains(guitaristA));
+      expect(dataStore.allPerformers, contains(guitaristB));
 
-      List<Performer> performers = dataStore.getRecommendedPerformers();
+      List<Performer> performers = dataStore.recommendedPerformers;
 
       Performer firstPerformer = performers[0];
       Performer secondPerformer = performers[1];
@@ -61,13 +71,13 @@ void main() {
     test('addPerformer prioritizes performers by number of times played', () {
       guitaristA.finalizePerformer();
 
-      dataStore.addPerformer(guitaristA);
-      dataStore.addPerformer(guitaristB);
+      dataStore.addPerformerToCurrentJam(guitaristA);
+      dataStore.addPerformerToCurrentJam(guitaristB);
 
-      expect(dataStore.getPerformers(), contains(guitaristA));
-      expect(dataStore.getPerformers(), contains(guitaristB));
+      expect(dataStore.allPerformers, contains(guitaristA));
+      expect(dataStore.allPerformers, contains(guitaristB));
 
-      List<Performer> performers = dataStore.getRecommendedPerformers();
+      List<Performer> performers = dataStore.recommendedPerformers;
 
       Performer firstPerformer = performers[0];
       Performer secondPerformer = performers[1];
@@ -78,66 +88,66 @@ void main() {
 
     // test that dataStore.removePerformerByIndex works correctly
     test('should remove a performer by index correctly', () {
-      dataStore.addPerformer(guitaristA);
-      dataStore.addPerformer(guitaristB);
-      dataStore.removePerformerByIndex(0);
+      dataStore.addPerformerToCurrentJam(guitaristA);
+      dataStore.addPerformerToCurrentJam(guitaristB);
+      dataStore.removePerformerFromCurrentJam(0);
 
-      expect(dataStore.getPerformers(), isNot(contains(guitaristA)));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
-          isFalse);
-      expect(dataStore.getRecommendedPerformers(), isNot(contains(guitaristA)));
-      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristA)));
+      expect(dataStore.allPerformers, isNot(contains(guitaristA)));
+      expect(
+          dataStore.performersByInstrument.containsValue(guitaristA), isFalse);
+      expect(dataStore.recommendedPerformers, isNot(contains(guitaristA)));
+      expect(dataStore.selectedPerformers, isNot(contains(guitaristA)));
 
-      expect(dataStore.getPerformers(), contains(guitaristB));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristB),
-          isTrue);
-      expect(dataStore.getRecommendedPerformers(), contains(guitaristB));
-      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristB)));
+      expect(dataStore.allPerformers, contains(guitaristB));
+      expect(
+          dataStore.performersByInstrument.containsValue(guitaristB), isTrue);
+      expect(dataStore.recommendedPerformers, contains(guitaristB));
+      expect(dataStore.selectedPerformers, isNot(contains(guitaristB)));
     });
 
     test('should move a performer from recommended to selected correctly', () {
-      dataStore.addPerformer(guitaristA);
-      dataStore.addPerformer(guitaristB);
+      dataStore.addPerformerToCurrentJam(guitaristA);
+      dataStore.addPerformerToCurrentJam(guitaristB);
       dataStore.movePerformerFromRecommendedToSelected(0);
 
-      expect(dataStore.getPerformers(), contains(guitaristA));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
-          isTrue);
-      expect(dataStore.getRecommendedPerformers(), isNot(contains(guitaristA)));
-      expect(dataStore.getSelectedPerformers(), contains(guitaristA));
+      expect(dataStore.allPerformers, contains(guitaristA));
+      expect(
+          dataStore.performersByInstrument.containsValue(guitaristA), isTrue);
+      expect(dataStore.recommendedPerformers, isNot(contains(guitaristA)));
+      expect(dataStore.selectedPerformers, contains(guitaristA));
 
-      expect(dataStore.getPerformers(), contains(guitaristB));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristB),
-          isTrue);
-      expect(dataStore.getRecommendedPerformers(), contains(guitaristB));
-      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristB)));
+      expect(dataStore.allPerformers, contains(guitaristB));
+      expect(
+          dataStore.performersByInstrument.containsValue(guitaristB), isTrue);
+      expect(dataStore.recommendedPerformers, contains(guitaristB));
+      expect(dataStore.selectedPerformers, isNot(contains(guitaristB)));
     });
 
     test('should remove a performer from selected correctly', () {
-      dataStore.addPerformer(guitaristA);
+      dataStore.addPerformerToCurrentJam(guitaristA);
       dataStore.movePerformerFromRecommendedToSelected(0);
       dataStore.removePerformerFromSelectedPerformers(0);
 
-      expect(dataStore.getPerformers(), contains(guitaristA));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
-          isTrue);
-      expect(dataStore.getRecommendedPerformers(), contains(guitaristA));
-      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristA)));
+      expect(dataStore.allPerformers, contains(guitaristA));
+      expect(
+          dataStore.performersByInstrument.containsValue(guitaristA), isTrue);
+      expect(dataStore.recommendedPerformers, contains(guitaristA));
+      expect(dataStore.selectedPerformers, isNot(contains(guitaristA)));
     });
 
     // test that finalizeSelectedBand() works as expected
     test('should finalize selected band correctly', () {
-      dataStore.addPerformer(guitaristA);
+      dataStore.addPerformerToCurrentJam(guitaristA);
       dataStore.movePerformerFromRecommendedToSelected(0);
       dataStore.finalizeSelectedBand();
 
-      expect(dataStore.getPerformers(), contains(guitaristA));
-      expect(dataStore.getPerformersByInstrument().containsValue(guitaristA),
-          isTrue);
-      expect(dataStore.getRecommendedPerformers(), contains(guitaristA));
-      expect(dataStore.getSelectedPerformers(), isNot(contains(guitaristA)));
-      expect(guitaristA.getNumberOfTimesPlayed(), equals(1));
-      expect(guitaristA.getLastPlayed().isAfter(now), isTrue);
+      expect(dataStore.allPerformers, contains(guitaristA));
+      expect(
+          dataStore.performersByInstrument.containsValue(guitaristA), isTrue);
+      expect(dataStore.recommendedPerformers, contains(guitaristA));
+      expect(dataStore.selectedPerformers, isNot(contains(guitaristA)));
+      expect(guitaristA.numberOfTimesPlayed, equals(1));
+      expect(guitaristA.lastPlayed.isAfter(now), isTrue);
     });
   });
 }

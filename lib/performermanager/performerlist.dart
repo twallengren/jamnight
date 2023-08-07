@@ -27,7 +27,7 @@ class PerformerList extends StatelessWidget {
             startSwipeActionsBuilder:
                 (BuildContext context, DataGridRow dataGridRow, int rowIndex) {
               return GestureDetector(
-                onTap: () => dataStore.savePerformer(rowIndex),
+                onTap: () => dataStore.savePerformerAsJamRegular(rowIndex),
                 child: Container(
                   color: Colors.greenAccent,
                   child: const Center(child: Icon(Icons.add)),
@@ -37,7 +37,7 @@ class PerformerList extends StatelessWidget {
             endSwipeActionsBuilder:
                 (BuildContext context, DataGridRow dataGridRow, int rowIndex) {
               return GestureDetector(
-                onTap: () => dataStore.removePerformerByIndex(rowIndex),
+                onTap: () => dataStore.removePerformerFromCurrentJam(rowIndex),
                 child: Container(
                   color: Colors.redAccent,
                   child: const Center(child: Icon(Icons.remove)),

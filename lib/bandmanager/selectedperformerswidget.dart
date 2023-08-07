@@ -86,7 +86,7 @@ class SelectedPerformersDataSource extends DataGridSource {
   List<DataGridRow> getBandRows(DataStore dataStore) {
     List<DataGridRow> bandRows = [];
 
-    List<Performer> selectedPerformers = dataStore.getSelectedPerformers();
+    List<Performer> selectedPerformers = dataStore.selectedPerformers;
 
     for (Performer performer in selectedPerformers) {
       bandRows.add(DataGridRow(cells: <DataGridCell>[
