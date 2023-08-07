@@ -32,6 +32,9 @@ class DataStore extends ChangeNotifier {
           _currentJamPerformers.add(performer);
           _performersByInstrument.add(performer.instrument, performer);
         }
+        if (performer.status == PerformerStatus.selected) {
+          _selectedPerformers.add(performer);
+        }
       }
       _updateRecommendedPerformers();
       notifyListeners();

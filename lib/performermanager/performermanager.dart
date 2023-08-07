@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../data/datastore.dart';
@@ -21,6 +22,7 @@ class PerformerManager extends StatefulWidget {
 }
 
 class _PerformerManagerState extends State<PerformerManager> {
+  final Logger logger = Logger();
   final TextEditingController _nameController = TextEditingController();
 
   Performer? _savedPerformer;
@@ -49,8 +51,25 @@ class _PerformerManagerState extends State<PerformerManager> {
   }
 
   void _addPerformer(DataStore dataStore) {
-
     if (_savedPerformer == null) {
+
+      // TODO: Add UI popups for validation problems
+
+      if (_nameController.text.isEmpty) {
+        logger.i('Cannot add performer with empty name');
+        return;
+      }
+
+      if (_instrument == null) {
+        logger.i('Cannot add performer with no instrument');
+        return;
+      }
+
+      if (_experienceLevel == null) {
+        logger.i('Cannot add performer with no experience level');
+        return;
+      }
+
       final Performer performer = Performer(
           name: _nameController.text,
           instrument: _instrument!,
@@ -62,9 +81,33 @@ class _PerformerManagerState extends State<PerformerManager> {
           numberOfTimesPlayed: 0);
       dataStore.addPerformerToCurrentJam(performer);
     } else {
+
+      // TODO: Add UI popups for validation problems
+
+      if (_nameController.text != _savedPerformer!.name) {
+        logger.i('Cannot change name of saved performer');
+        clearForm();
+        return;
+      }
+
+      if (_instrument != _savedPerformer!.instrument) {
+        logger.i('Cannot change instrument of saved performer');
+        clearForm();
+        return;
+      }
+
+      if (_experienceLevel != _savedPerformer!.experienceLevel) {
+        logger.i('Cannot change experience level of saved performer');
+        clearForm();
+        return;
+      }
+
       dataStore.addPerformerToCurrentJam(_savedPerformer!);
     }
+    clearForm();
+  }
 
+  void clearForm() {
     setState(() {
       _nameController.clear();
       _savedPerformer = null;
