@@ -12,6 +12,7 @@ import 'enternamebox.dart';
 import 'experienceleveldropdown.dart';
 import 'instrumentdropdown.dart';
 import 'performerlist.dart';
+import 'searchperformertextbox.dart';
 import 'selectregulardropdown.dart';
 
 class PerformerManager extends StatefulWidget {
@@ -24,10 +25,13 @@ class PerformerManager extends StatefulWidget {
 class _PerformerManagerState extends State<PerformerManager> {
   final Logger logger = Logger();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _searchPerformerController =
+      TextEditingController();
 
   Performer? _savedPerformer;
   Instrument? _instrument;
   ExperienceLevel? _experienceLevel;
+  List<Performer> _filteredJamPerformers = [];
 
   void _selectSavedPerformer(Performer performer) {
     setState(() {
@@ -52,7 +56,6 @@ class _PerformerManagerState extends State<PerformerManager> {
 
   void _addPerformer(DataStore dataStore) {
     if (_savedPerformer == null) {
-
       // TODO: Add UI popups for validation problems
 
       if (_nameController.text.isEmpty) {
@@ -81,33 +84,33 @@ class _PerformerManagerState extends State<PerformerManager> {
           numberOfTimesPlayed: 0);
       dataStore.addPerformerToCurrentJam(performer);
     } else {
-
       // TODO: Add UI popups for validation problems
 
       if (_nameController.text != _savedPerformer!.name) {
         logger.i('Cannot change name of saved performer');
-        clearForm();
+        _clearForm();
         return;
       }
 
       if (_instrument != _savedPerformer!.instrument) {
         logger.i('Cannot change instrument of saved performer');
-        clearForm();
+        _clearForm();
         return;
       }
 
       if (_experienceLevel != _savedPerformer!.experienceLevel) {
         logger.i('Cannot change experience level of saved performer');
-        clearForm();
+        _clearForm();
         return;
       }
 
       dataStore.addPerformerToCurrentJam(_savedPerformer!);
     }
-    clearForm();
+    _clearForm();
+    _filterCurrentJamPerformers(dataStore);
   }
 
-  void clearForm() {
+  void _clearForm() {
     setState(() {
       _nameController.clear();
       _savedPerformer = null;
@@ -116,9 +119,20 @@ class _PerformerManagerState extends State<PerformerManager> {
     });
   }
 
+  void _filterCurrentJamPerformers(DataStore dataStore) {
+    setState(() {
+      _filteredJamPerformers = dataStore.currentJamPerformers
+          .where((Performer performer) => performer.name
+              .toLowerCase()
+              .startsWith(_searchPerformerController.text.toLowerCase()))
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     DataStore dataStore = Provider.of<DataStore>(context, listen: true);
+    _filterCurrentJamPerformers(dataStore);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -138,7 +152,11 @@ class _PerformerManagerState extends State<PerformerManager> {
                 onExperienceLevelSelected: _selectExperienceLevel),
             AddPerformerButton(
                 onAddPerformerPressed: () => _addPerformer(dataStore)),
-            PerformerList(performers: dataStore.currentJamPerformers)
+            SearchPerformerTextBox(
+                searchPerformerController: _searchPerformerController,
+                onChanged: (String value) =>
+                    _filterCurrentJamPerformers(dataStore)),
+            PerformerList(performers: _filteredJamPerformers),
           ],
         ));
   }
