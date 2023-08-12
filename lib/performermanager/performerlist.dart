@@ -53,10 +53,10 @@ class PerformerList extends StatelessWidget {
                 columnName: 'Instrument',
                 label: const Text('Instrument'),
               ),
-              GridColumn(
-                columnName: 'Experience Level',
-                label: const Text('Experience Level'),
-              ),
+              // GridColumn(
+              //   columnName: 'Experience Level',
+              //   label: const Text('Experience Level'),
+              // ),
             ],
           ),
         ],

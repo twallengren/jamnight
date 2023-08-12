@@ -25,12 +25,15 @@ class PerformerManager extends StatefulWidget {
 class _PerformerManagerState extends State<PerformerManager> {
   final Logger logger = Logger();
   final TextEditingController _nameController = TextEditingController();
+
+  // TODO: Removing a searched performer does not remove correct performer,
+  // assume this is the case with adding regular as well
   final TextEditingController _searchPerformerController =
       TextEditingController();
 
   Performer? _savedPerformer;
   Instrument? _instrument;
-  ExperienceLevel? _experienceLevel;
+  ExperienceLevel? _experienceLevel = ExperienceLevel.unknown;
   List<Performer> _filteredJamPerformers = [];
 
   void _selectSavedPerformer(Performer performer) {
@@ -68,10 +71,10 @@ class _PerformerManagerState extends State<PerformerManager> {
         return;
       }
 
-      if (_experienceLevel == null) {
-        logger.i('Cannot add performer with no experience level');
-        return;
-      }
+      // if (_experienceLevel == null) {
+      //   logger.i('Cannot add performer with no experience level');
+      //   return;
+      // }
 
       final Performer performer = Performer(
           name: _nameController.text,
@@ -115,7 +118,7 @@ class _PerformerManagerState extends State<PerformerManager> {
       _nameController.clear();
       _savedPerformer = null;
       _instrument = null;
-      _experienceLevel = null;
+      //_experienceLevel = null;
     });
   }
 
@@ -147,9 +150,9 @@ class _PerformerManagerState extends State<PerformerManager> {
             InstrumentDropdown(
                 instrument: _instrument,
                 onInstrumentSelected: _selectInstrument),
-            ExperienceLevelDropdown(
-                experienceLevel: _experienceLevel,
-                onExperienceLevelSelected: _selectExperienceLevel),
+            // ExperienceLevelDropdown(
+            //     experienceLevel: _experienceLevel,
+            //     onExperienceLevelSelected: _selectExperienceLevel),
             AddPerformerButton(
                 onAddPerformerPressed: () => _addPerformer(dataStore)),
             SearchPerformerTextBox(

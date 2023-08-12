@@ -32,9 +32,9 @@ class PerformersDataSource extends DataGridSource {
         DataGridCell(
             columnName: 'Instrument',
             value: performer.instrument.name.toUpperCase()),
-        DataGridCell(
-            columnName: 'Experience Level',
-            value: performer.experienceLevel.name.toUpperCase()),
+        // DataGridCell(
+        //     columnName: 'Experience Level',
+        //     value: performer.experienceLevel.name.toUpperCase()),
       ]));
     }
 

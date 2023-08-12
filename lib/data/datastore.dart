@@ -140,7 +140,15 @@ class DataStore extends ChangeNotifier {
   }
 
   Future<List<Performer>> getJamNightRegularsNotInCurrentJam() {
-    return _jamNightDAO.getJamNightRegularsNotInCurrentJam();
+    return sortPerformersByName(
+        _jamNightDAO.getJamNightRegularsNotInCurrentJam());
+  }
+
+  Future<List<Performer>> sortPerformersByName(
+      Future<List<Performer>> performersFuture) async {
+    var performers = await performersFuture;
+    performers.sort((a, b) => a.name.compareTo(b.name));
+    return performers;
   }
 
   List<Performer> _getRecommendedPerformers() {
