@@ -90,7 +90,7 @@ void main() {
     test('should remove a performer by index correctly', () {
       dataStore.addPerformerToCurrentJam(guitaristA);
       dataStore.addPerformerToCurrentJam(guitaristB);
-      dataStore.removePerformerFromCurrentJam(0);
+      dataStore.removePerformerFromCurrentJam(guitaristA);
 
       expect(dataStore.allPerformers, isNot(contains(guitaristA)));
       expect(
