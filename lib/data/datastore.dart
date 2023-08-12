@@ -67,10 +67,9 @@ class DataStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removePerformerFromCurrentJam(int rowIndex) {
-    Performer performer = _currentJamPerformers[rowIndex];
+  void removePerformerFromCurrentJam(Performer performer) {
     logger.i('Removing performer: $performer');
-    _currentJamPerformers.removeAt(rowIndex);
+    _currentJamPerformers.remove(performer);
     _performersByInstrument
         .removeWhere((Instrument instrument, Performer p) => p == performer);
     _selectedPerformers.remove(performer);
@@ -86,8 +85,7 @@ class DataStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  void savePerformerAsJamRegular(int rowIndex) {
-    Performer performer = _currentJamPerformers[rowIndex];
+  void savePerformerAsJamRegular(Performer performer) {
 
     if (performer.isJamRegular) {
       logger.i('Performer already saved: ${performer.name}');
@@ -140,7 +138,15 @@ class DataStore extends ChangeNotifier {
   }
 
   Future<List<Performer>> getJamNightRegularsNotInCurrentJam() {
-    return _jamNightDAO.getJamNightRegularsNotInCurrentJam();
+    return sortPerformersByName(
+        _jamNightDAO.getJamNightRegularsNotInCurrentJam());
+  }
+
+  Future<List<Performer>> sortPerformersByName(
+      Future<List<Performer>> performersFuture) async {
+    var performers = await performersFuture;
+    performers.sort((a, b) => a.name.compareTo(b.name));
+    return performers;
   }
 
   List<Performer> _getRecommendedPerformers() {

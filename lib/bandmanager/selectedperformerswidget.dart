@@ -47,10 +47,6 @@ class _SelectedPerformersWidgetState extends State<SelectedPerformersWidget> {
                 columnName: 'Instrument',
                 label: const Text('Instrument'),
               ),
-              GridColumn(
-                columnName: 'Experience Level',
-                label: const Text('Experience Level'),
-              ),
             ],
           ),
           ElevatedButton(
@@ -94,9 +90,6 @@ class SelectedPerformersDataSource extends DataGridSource {
         DataGridCell(
             columnName: 'Instrument',
             value: performer.instrument.name.toUpperCase()),
-        DataGridCell(
-            columnName: 'Experience Level',
-            value: performer.experienceLevel.name.toUpperCase()),
       ]));
     }
 

@@ -44,16 +44,16 @@ class _RecommendedPerformersWidgetState
             },
             columns: <GridColumn>[
               GridColumn(
-                columnName: 'Name',
-                label: const Text('Name'),
-              ),
-              GridColumn(
-                columnName: 'Instrument',
-                label: const Text('Instrument'),
+                columnName: 'Performer',
+                label: const Text('Performer'),
               ),
               GridColumn(
                 columnName: 'Times Played',
                 label: const Text('Times Played'),
+              ),
+              GridColumn(
+                columnName: 'Last Played',
+                label: const Text('Last Played'),
               ),
             ],
           ),
@@ -86,21 +86,31 @@ class RecommendedPerformersDataSource extends DataGridSource {
   List<DataGridRow> getBandRows() {
     List<DataGridRow> bandRows = [];
 
-    List<Performer> recommendedPerformers =
-        dataStore.recommendedPerformers;
+    List<Performer> recommendedPerformers = dataStore.recommendedPerformers;
 
     for (Performer performer in recommendedPerformers) {
       bandRows.add(DataGridRow(cells: <DataGridCell>[
-        DataGridCell(columnName: 'Name', value: performer.name),
         DataGridCell(
-            columnName: 'Instrument',
-            value: performer.instrument.name.toUpperCase()),
+            columnName: 'Performer',
+            value:
+                '${performer.name} (${performer.instrument.name.toUpperCase()})'),
         DataGridCell(
             columnName: 'Number of Times Played',
             value: performer.numberOfTimesPlayed),
+        DataGridCell(
+            columnName: 'Last Played', value: timeToNearestMinute(performer)),
       ]));
     }
 
     return bandRows;
+  }
+
+  String timeToNearestMinute(Performer performer) {
+    if (performer.numberOfTimesPlayed == 0) {
+      return 'N/A';
+    }
+    DateTime dt = performer.lastPlayed;
+    String twoDigit(int n) => n.toString().padLeft(2, '0');
+    return '${twoDigit(dt.hour)}:${twoDigit(dt.minute)}';
   }
 }
