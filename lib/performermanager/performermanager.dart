@@ -116,7 +116,7 @@ class _PerformerManagerState extends State<PerformerManager> {
       _nameController.clear();
       _savedPerformer = null;
       _instrument = null;
-      //_experienceLevel = null;
+      _experienceLevel = ExperienceLevel.unknown;
     });
   }
 
