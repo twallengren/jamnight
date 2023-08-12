@@ -9,7 +9,6 @@ import '../model/performer/performer.dart';
 import '../model/performer/performerstatus.dart';
 import 'addperformerbutton.dart';
 import 'enternamebox.dart';
-import 'experienceleveldropdown.dart';
 import 'instrumentdropdown.dart';
 import 'performerlist.dart';
 import 'searchperformertextbox.dart';
@@ -26,8 +25,6 @@ class _PerformerManagerState extends State<PerformerManager> {
   final Logger logger = Logger();
   final TextEditingController _nameController = TextEditingController();
 
-  // TODO: Removing a searched performer does not remove correct performer,
-  // assume this is the case with adding regular as well
   final TextEditingController _searchPerformerController =
       TextEditingController();
 
@@ -51,12 +48,6 @@ class _PerformerManagerState extends State<PerformerManager> {
     });
   }
 
-  void _selectExperienceLevel(ExperienceLevel experienceLevel) {
-    setState(() {
-      _experienceLevel = experienceLevel;
-    });
-  }
-
   void _addPerformer(DataStore dataStore) {
     if (_savedPerformer == null) {
       // TODO: Add UI popups for validation problems
@@ -70,11 +61,6 @@ class _PerformerManagerState extends State<PerformerManager> {
         logger.i('Cannot add performer with no instrument');
         return;
       }
-
-      // if (_experienceLevel == null) {
-      //   logger.i('Cannot add performer with no experience level');
-      //   return;
-      // }
 
       final Performer performer = Performer(
           name: _nameController.text,
@@ -110,6 +96,18 @@ class _PerformerManagerState extends State<PerformerManager> {
       dataStore.addPerformerToCurrentJam(_savedPerformer!);
     }
     _clearForm();
+    _filterCurrentJamPerformers(dataStore);
+  }
+
+  void _removePerformerFromCurrentJam(DataStore dataStore, int rowIndex) {
+    Performer performer = _filteredJamPerformers[rowIndex];
+    dataStore.removePerformerFromCurrentJam(performer);
+    _filterCurrentJamPerformers(dataStore);
+  }
+
+  void _savePerformerAsRegular(DataStore dataStore, int rowIndex) {
+    Performer performer = _filteredJamPerformers[rowIndex];
+    dataStore.savePerformerAsJamRegular(performer);
     _filterCurrentJamPerformers(dataStore);
   }
 
@@ -150,16 +148,18 @@ class _PerformerManagerState extends State<PerformerManager> {
             InstrumentDropdown(
                 instrument: _instrument,
                 onInstrumentSelected: _selectInstrument),
-            // ExperienceLevelDropdown(
-            //     experienceLevel: _experienceLevel,
-            //     onExperienceLevelSelected: _selectExperienceLevel),
             AddPerformerButton(
                 onAddPerformerPressed: () => _addPerformer(dataStore)),
             SearchPerformerTextBox(
                 searchPerformerController: _searchPerformerController,
                 onChanged: (String value) =>
                     _filterCurrentJamPerformers(dataStore)),
-            PerformerList(performers: _filteredJamPerformers),
+            PerformerList(
+                performers: _filteredJamPerformers,
+                onRemoved: (int rowIndex) =>
+                    _removePerformerFromCurrentJam(dataStore, rowIndex),
+                onSaved: (int rowIndex) =>
+                    _savePerformerAsRegular(dataStore, rowIndex)),
           ],
         ));
   }

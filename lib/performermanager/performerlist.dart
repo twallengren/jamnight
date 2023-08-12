@@ -7,9 +7,11 @@ import '../model/performer/performer.dart';
 import 'performersdatasource.dart';
 
 class PerformerList extends StatelessWidget {
-  const PerformerList({super.key, required this.performers});
+  const PerformerList({super.key, required this.performers, required this.onRemoved, required this.onSaved});
 
   final List<Performer> performers;
+  final ValueChanged<int> onRemoved;
+  final ValueChanged<int> onSaved;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class PerformerList extends StatelessWidget {
             startSwipeActionsBuilder:
                 (BuildContext context, DataGridRow dataGridRow, int rowIndex) {
               return GestureDetector(
-                onTap: () => dataStore.savePerformerAsJamRegular(rowIndex),
+                onTap: () => onSaved(rowIndex),
                 child: Container(
                   color: Colors.greenAccent,
                   child: const Center(child: Icon(Icons.add)),
@@ -37,7 +39,7 @@ class PerformerList extends StatelessWidget {
             endSwipeActionsBuilder:
                 (BuildContext context, DataGridRow dataGridRow, int rowIndex) {
               return GestureDetector(
-                onTap: () => dataStore.removePerformerFromCurrentJam(rowIndex),
+                onTap: () => onRemoved(rowIndex),
                 child: Container(
                   color: Colors.redAccent,
                   child: const Center(child: Icon(Icons.remove)),
