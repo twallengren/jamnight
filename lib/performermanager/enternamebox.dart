@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class EnterNameBox extends StatelessWidget {
-  const EnterNameBox({
-    super.key,
+
+  static const Key widgetKey = Key('PerformerManager.EnterNameBox');
+
+  const EnterNameBox({super.key, 
     required TextEditingController nameController,
   }) : _nameController = nameController;
 

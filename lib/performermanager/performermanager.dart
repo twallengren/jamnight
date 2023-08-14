@@ -144,7 +144,7 @@ class _PerformerManagerState extends State<PerformerManager> {
             SelectRegularDropdown(
                 savedPerformer: _savedPerformer,
                 onPerformerSelected: _selectSavedPerformer),
-            EnterNameBox(nameController: _nameController),
+            EnterNameBox(key: EnterNameBox.widgetKey, nameController: _nameController),
             InstrumentDropdown(
                 instrument: _instrument,
                 onInstrumentSelected: _selectInstrument),

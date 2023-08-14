@@ -9,13 +9,13 @@ import 'jamnightdao.dart';
 
 class DataStore extends ChangeNotifier {
   final Logger logger = Logger();
-  final JamNightDAO _jamNightDAO = JamNightDAO.instance;
   final List<Performer> _allPerformers = [];
   final List<Performer> _currentJamPerformers = [];
   final Multimap<Instrument, Performer> _performersByInstrument =
       Multimap<Instrument, Performer>();
   final List<Performer> _recommendedPerformers = [];
   final List<Performer> _selectedPerformers = [];
+  late JamNightDAO _jamNightDAO;
 
   List<Performer> get allPerformers => _allPerformers;
   List<Performer> get currentJamPerformers => _currentJamPerformers;
@@ -24,7 +24,8 @@ class DataStore extends ChangeNotifier {
   List<Performer> get recommendedPerformers => _recommendedPerformers;
   List<Performer> get selectedPerformers => _selectedPerformers;
 
-  DataStore() {
+  DataStore(JamNightDAO jamNightDAO) {
+    _jamNightDAO = jamNightDAO;
     _jamNightDAO.getPerformers().then((List<Performer> performers) {
       for (Performer performer in performers) {
         _allPerformers.add(performer);

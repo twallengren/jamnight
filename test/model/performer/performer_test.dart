@@ -23,11 +23,11 @@ void main() {
     });
 
     test(
-        'Performer is equal to another performer with same name and instrument',
+        'Performer is equal to another performer with same name',
         () {
       final guitaristB = Performer(
           name: 'guitaristA',
-          instrument: Instrument.guitar,
+          instrument: Instrument.bass,
           experienceLevel: ExperienceLevel.intermediate,
           created: nowPlusOne,
           status: PerformerStatus.present,
@@ -48,21 +48,6 @@ void main() {
           lastPlayed: nowPlusOne,
           numberOfTimesPlayed: 0);
       expect(guitaristA, isNot(equals(guitaristB)));
-    });
-
-    test(
-        'Performer is not equal to another performer with different instrument',
-        () {
-      final bassist = Performer(
-          name: 'guitaristA',
-          instrument: Instrument.bass,
-          experienceLevel: ExperienceLevel.intermediate,
-          created: nowPlusOne,
-          status: PerformerStatus.present,
-          isJamRegular: false,
-          lastPlayed: nowPlusOne,
-          numberOfTimesPlayed: 0);
-      expect(guitaristA, isNot(equals(bassist)));
     });
 
     test('selectPerformer changes status to selected', () {

@@ -1,9 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:jamnight/data/jamnightdao.dart';
 import 'package:jamnight/model/performer/experiencelevel.dart';
 import 'package:jamnight/data/datastore.dart';
 import 'package:jamnight/model/performer/performer.dart';
 import 'package:jamnight/model/instrument/instrument.dart';
 import 'package:jamnight/model/performer/performerstatus.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+
+@GenerateNiceMocks([MockSpec<JamNightDAO>()])
+import 'datastore_test.mocks.dart';
 
 void main() {
   group('DataStore', () {
@@ -12,9 +18,11 @@ void main() {
     late DataStore dataStore;
     late Performer guitaristA;
     late Performer guitaristB;
+    late JamNightDAO mockJamNightDAO;
 
     setUp(() {
-      dataStore = DataStore();
+      mockJamNightDAO = MockJamNightDAO();
+      dataStore = DataStore(mockJamNightDAO);
       guitaristA = Performer(
           name: 'guitaristA',
           instrument: Instrument.guitar,
@@ -69,9 +77,9 @@ void main() {
     });
 
     test('addPerformer prioritizes performers by number of times played', () {
-      guitaristA.finalizePerformer();
-
       dataStore.addPerformerToCurrentJam(guitaristA);
+      dataStore.movePerformerFromRecommendedToSelected(0);
+      dataStore.finalizeSelectedBand();
       dataStore.addPerformerToCurrentJam(guitaristB);
 
       expect(dataStore.allPerformers, contains(guitaristA));
