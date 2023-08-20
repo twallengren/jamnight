@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:quiver/collection.dart';
@@ -5,6 +7,7 @@ import 'package:quiver/collection.dart';
 import '../model/instrument/instrument.dart';
 import '../model/performer/performer.dart';
 import '../model/performer/performerstatus.dart';
+import 'datastoreevent.dart';
 import 'jamnightdao.dart';
 
 class DataStore extends ChangeNotifier {
@@ -16,6 +19,7 @@ class DataStore extends ChangeNotifier {
   final List<Performer> _recommendedPerformers = [];
   final List<Performer> _selectedPerformers = [];
   late JamNightDAO _jamNightDAO;
+  final _eventController = StreamController<DataStoreEvent>.broadcast();
 
   List<Performer> get allPerformers => _allPerformers;
   List<Performer> get currentJamPerformers => _currentJamPerformers;
@@ -23,6 +27,7 @@ class DataStore extends ChangeNotifier {
       _performersByInstrument;
   List<Performer> get recommendedPerformers => _recommendedPerformers;
   List<Performer> get selectedPerformers => _selectedPerformers;
+  Stream<DataStoreEvent> get events => _eventController.stream;
 
   DataStore(JamNightDAO jamNightDAO) {
     _jamNightDAO = jamNightDAO;
@@ -65,6 +70,7 @@ class DataStore extends ChangeNotifier {
     _currentJamPerformers.add(performer);
     _performersByInstrument.add(performer.instrument, performer);
     _updateRecommendedPerformers();
+    _eventController.add(DataStoreEvent.performerAddedToCurrentJam);
     notifyListeners();
   }
 
@@ -87,7 +93,6 @@ class DataStore extends ChangeNotifier {
   }
 
   void savePerformerAsJamRegular(Performer performer) {
-
     if (performer.isJamRegular) {
       logger.i('Performer already saved: ${performer.name}');
       return;

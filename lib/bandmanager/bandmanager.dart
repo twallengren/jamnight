@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
+import '../model/performer/performer.dart';
 import 'recommendedperformerswidget.dart';
 import 'selectedperformerswidget.dart';
 
@@ -11,6 +13,8 @@ class BandManager extends StatefulWidget {
 }
 
 class _BandManagerState extends State<BandManager> {
+  final Logger logger = Logger();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
