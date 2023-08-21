@@ -8,6 +8,6 @@ import 'jamnight.dart';
 void main() {
   runApp(ChangeNotifierProvider(
     create: (BuildContext context) => DataStore(JamNightDAO.instance),
-    child: JamNight(title: 'Jam Night', dataStore: DataStore(JamNightDAO.instance)),
+    child: JamNight(title: 'Jam Night'),
   ));
 }
