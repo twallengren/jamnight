@@ -6,5 +6,8 @@ class PerformerManagerService {
   final PerformerManagerModel _performerManagerModel;
 
   PerformerManagerService(this._performerManagerModel);
-  
+
+  void selectSavedPerformer(Performer performer) {
+    _performerManagerModel.selectSavedPerformer(performer);
+  }
 }

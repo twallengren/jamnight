@@ -9,15 +9,15 @@ import 'performermanager/performermanager.dart';
 import 'performermanager/performermanagermodel.dart';
 
 class JamNight extends StatelessWidget {
-  JamNight({super.key, required this.title});
+  JamNight({super.key, required this.title, required this.dataStore});
 
   final String title;
+  final DataStore dataStore;
 
   final Logger logger = Logger();
 
   @override
   Widget build(BuildContext context) {
-    DataStore dataStore = Provider.of<DataStore>(context, listen: false);
     return MaterialApp(
       title: title,
       theme: ThemeData(
@@ -30,7 +30,7 @@ class JamNight extends StatelessWidget {
         '/performermanager': (BuildContext context) =>
             ChangeNotifierProvider<PerformerManagerModel>(
                 create: (BuildContext context) => PerformerManagerModel(dataStore),
-                child: PerformerManager()),
+                child: const PerformerManager()),
         '/bandmanager': (BuildContext context) => const BandManager(),
       },
     );
