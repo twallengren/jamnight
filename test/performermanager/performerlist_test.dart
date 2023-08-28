@@ -19,7 +19,7 @@ void main() {
           home: ChangeNotifierProvider(
         create: (_) => DataStore(mockJamNightDAO),
         child: PerformerList(
-          performers: const [],
+          performers: [],
           onRemoved: (int rowIndex) {},
           onSaved: (int rowIndex) {},
         ),

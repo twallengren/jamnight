@@ -11,8 +11,6 @@ import 'addperformerbutton.dart';
 import 'enternamebox.dart';
 import 'instrumentdropdown.dart';
 import 'performerlist.dart';
-import 'performermanagermodel.dart';
-import 'performermanagerservice.dart';
 import 'searchperformertextbox.dart';
 import 'selectregulardropdown.dart';
 
@@ -26,6 +24,7 @@ class PerformerManager extends StatefulWidget {
 class _PerformerManagerState extends State<PerformerManager> {
   final Logger logger = Logger();
   final TextEditingController _nameController = TextEditingController();
+
   final TextEditingController _searchPerformerController =
       TextEditingController();
 
@@ -34,20 +33,13 @@ class _PerformerManagerState extends State<PerformerManager> {
   ExperienceLevel? _experienceLevel = ExperienceLevel.unknown;
   List<Performer> _filteredJamPerformers = [];
 
-  PerformerManagerModel? _performerManagerModel;
-  PerformerManagerService? _performerManagerService;
-
-  @override
-  void initState() {
-    super.initState();
-    _performerManagerModel =
-        Provider.of<PerformerManagerModel>(context, listen: false);
-    _performerManagerService = PerformerManagerService(_performerManagerModel!);
-  }
-
   void _selectSavedPerformer(Performer performer) {
-    _performerManagerService!.selectSavedPerformer(performer);
-    _nameController.text = performer.name;
+    setState(() {
+      _savedPerformer = performer;
+      _nameController.text = performer.name;
+      _instrument = performer.instrument;
+      _experienceLevel = performer.experienceLevel;
+    });
   }
 
   void _selectInstrument(Instrument instrument) {
@@ -152,8 +144,7 @@ class _PerformerManagerState extends State<PerformerManager> {
             SelectRegularDropdown(
                 savedPerformer: _savedPerformer,
                 onPerformerSelected: _selectSavedPerformer),
-            EnterNameBox(
-                key: EnterNameBox.widgetKey, nameController: _nameController),
+            EnterNameBox(key: EnterNameBox.widgetKey, nameController: _nameController),
             InstrumentDropdown(
                 instrument: _instrument,
                 onInstrumentSelected: _selectInstrument),

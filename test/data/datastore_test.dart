@@ -6,6 +6,7 @@ import 'package:jamnight/model/performer/performer.dart';
 import 'package:jamnight/model/instrument/instrument.dart';
 import 'package:jamnight/model/performer/performerstatus.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
 @GenerateNiceMocks([MockSpec<JamNightDAO>()])
 import 'datastore_test.mocks.dart';
